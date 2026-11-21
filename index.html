@@ -172,7 +172,10 @@
               🎲
             </div>
             <div>
-              <span class="text-2xl font-black tracking-tight text-white">10<span class="text-emerald-400">Mil</span></span>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl font-black tracking-tight text-white">10<span class="text-emerald-400">Mil</span></span>
+                <span id="networkStatusDot" title="Estado de red P2P" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+              </div>
               <div class="flex items-center gap-1.5">
                 <span class="text-[11px] text-slate-400 uppercase font-semibold">Sala:</span>
                 <span id="displayRoomCode" class="text-xs font-mono font-extrabold text-amber-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">----</span>
@@ -191,6 +194,22 @@
 
         <!-- Parte 2 (Centro): Jugadores conectados / logueados (Máximo 5) -->
         <div class="md:col-span-6 flex flex-col items-center justify-center gap-1.5">
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+            <span>Jugadores en sala (<span id="playerCountLabel">0</span>/5):</span>
+            <button
+              id="btnAddLocalBot"
+              type="button"
+              class="px-2 py-0.5 rounded-md bg-slate-700 hover:bg-slate-600 text-emerald-300 text-[11px] font-bold transition cursor-pointer"
+              title="Agregar jugador local para probar en la misma pantalla"
+            >
+              + Jugador Local
+            </button>
+          </div>
+          <div id="playersBadgeList" class="flex flex-wrap items-center justify-center gap-1.5 min-h-[28px]">
+            <!-- Badges de jugadores logueados -->
+          </div>
+        </div>
+
         <!-- Parte 3 (Derecha): Botón verde Iniciar + Reiniciar / Salir -->
         <div class="md:col-span-3 flex items-center justify-center md:justify-end gap-2">
           <button
@@ -358,7 +377,7 @@
      * ============================================================================
      */
 
-    const ROOM_PREFIX = '10mil-sala-';
+    const ROOM_PREFIX = 'diezmil-v2-sala-';
     const TARGET_SCORE = 10000;
     const MAX_PLAYERS = 5;
 
@@ -371,13 +390,17 @@
     let roomCode = '';
     let hostConnection = null;
     let clientConnections = {};
+    let joinTimeoutId = null;
 
     const PEER_CONFIG = {
       debug: 0,
+      secure: true,
       config: {
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' }
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' },
+          { urls: 'stun:global.stun.twilio.com:3478' }
         ]
       }
     };
@@ -411,6 +434,7 @@
       btnJoinRoom: document.getElementById('btnJoinRoom'),
       loginStatus: document.getElementById('loginStatus'),
       displayRoomCode: document.getElementById('displayRoomCode'),
+      networkStatusDot: document.getElementById('networkStatusDot'),
       btnCopyCode: document.getElementById('btnCopyCode'),
       playerCountLabel: document.getElementById('playerCountLabel'),
       playersBadgeList: document.getElementById('playersBadgeList'),
@@ -576,32 +600,64 @@
         isLocalBot: false
       }];
 
-      // 1. Entrar de inmediato al tablero para que nunca se quede trabado
+      if (el.networkStatusDot) {
+        el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+        el.networkStatusDot.title = 'Registrando sala en línea...';
+      }
+
+      // 1. Entrar de inmediato al tablero
       enterGameScreen();
-      showToast(`Sala ${roomCode} creada. ¡Listo para jugar!`, '✅');
 
       // 2. Activar sincronización entre pestañas del mismo navegador
       setupLocalChannelHost();
 
-      // 3. Intentar abrir conexión P2P en segundo plano para otros dispositivos
+      // 3. Abrir conexión P2P en línea para otros dispositivos
       if (typeof Peer !== 'undefined') {
         try {
+          if (peer) {
+            try { peer.destroy(); } catch (e) {}
+          }
           peer = new Peer(myPeerId, PEER_CONFIG);
+
           peer.on('open', (id) => {
             myPeerId = id;
             if (gameState.players[0]) {
               gameState.players[0].id = id;
             }
+            if (el.networkStatusDot) {
+              el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+              el.networkStatusDot.title = 'Sala en línea lista para invitados';
+            }
+            showToast(`Sala ${roomCode} en línea. Ya pueden unirse desde otro dispositivo.`, '🌐');
             renderAll();
           });
+
           peer.on('connection', (conn) => {
-            conn.on('data', (data) => handleHostIncomingData(conn.peer, data, (payload) => {
-              if (conn.open) conn.send(payload);
-            }));
+            conn.on('open', () => {
+              clientConnections[conn.peer] = conn;
+            });
+            conn.on('data', (data) => {
+              clientConnections[conn.peer] = conn;
+              handleHostIncomingData(conn.peer, data, (payload) => {
+                if (conn.open) conn.send(payload);
+              });
+            });
             conn.on('close', () => handleClientDisconnect(conn.peer));
+            conn.on('error', () => handleClientDisconnect(conn.peer));
           });
-          peer.on('error', () => {
-            // Silencioso: el juego sigue funcionando en local y entre pestañas
+
+          peer.on('error', (err) => {
+            if (err && err.type === 'unavailable-id') {
+              // Si el código chocó en la nube, generar otro automáticamente
+              roomCode = generateRoomCode();
+              el.displayRoomCode.textContent = roomCode;
+              initHostRoom();
+              return;
+            }
+            if (el.networkStatusDot) {
+              el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+              el.networkStatusDot.title = 'Solo modo local/mismo navegador';
+            }
           });
         } catch (e) {
           // Continuar en modo local sin bloquear
@@ -626,8 +682,9 @@
       el.loginStatus.classList.remove('hidden');
       el.loginStatus.textContent = `Conectando a la sala ${roomCode}...`;
       el.btnJoinRoom.disabled = true;
+      clearTimeout(joinTimeoutId);
 
-      const clientFallbackId = 'client-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      const clientFallbackId = 'invitado-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
       myPeerId = clientFallbackId;
       let connectedViaAnyChannel = false;
 
@@ -641,12 +698,14 @@
           if (data.targetId && data.targetId !== myPeerId && data.type !== 'STATE_UPDATE') return;
 
           if (data.type === 'JOIN_REJECTED') {
+            clearTimeout(joinTimeoutId);
             showToast(data.reason || 'No se pudo entrar a la sala.', '🚫');
             el.loginStatus.textContent = data.reason;
             el.btnJoinRoom.disabled = false;
             return;
           }
           if (data.type === 'STATE_UPDATE') {
+            clearTimeout(joinTimeoutId);
             connectedViaAnyChannel = true;
             gameState = data.state;
             if (el.gameScreen.classList.contains('hidden')) {
@@ -662,10 +721,15 @@
       // 2. Conexión P2P por internet (PeerJS)
       if (typeof Peer !== 'undefined') {
         try {
+          if (peer) {
+            try { peer.destroy(); } catch (e) {}
+          }
           peer = new Peer(clientFallbackId, PEER_CONFIG);
+
           peer.on('open', (id) => {
             myPeerId = id;
-            const conn = peer.connect(ROOM_PREFIX + roomCode, { reliable: true });
+            const targetHostId = ROOM_PREFIX + roomCode;
+            const conn = peer.connect(targetHostId, { reliable: true });
             hostConnection = conn;
 
             conn.on('open', () => {
@@ -674,14 +738,19 @@
 
             conn.on('data', (data) => {
               if (data.type === 'JOIN_REJECTED') {
+                clearTimeout(joinTimeoutId);
                 showToast(data.reason || 'No se pudo entrar a la sala.', '🚫');
                 el.loginStatus.textContent = data.reason;
                 el.btnJoinRoom.disabled = false;
-                peer.destroy();
+                try { peer.destroy(); } catch (e) {}
                 return;
               }
               if (data.type === 'STATE_UPDATE') {
+                clearTimeout(joinTimeoutId);
                 connectedViaAnyChannel = true;
+                if (el.networkStatusDot) {
+                  el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                }
                 gameState = data.state;
                 if (el.gameScreen.classList.contains('hidden')) {
                   enterGameScreen();
@@ -698,10 +767,19 @@
 
           peer.on('error', () => {
             if (!connectedViaAnyChannel) {
-              el.loginStatus.textContent = `No se encontró la sala "${roomCode}". Verifica el código.`;
+              clearTimeout(joinTimeoutId);
+              el.loginStatus.textContent = `No se encontró la sala "${roomCode}". Verifica que el anfitrión tenga el punto verde activo.`;
               el.btnJoinRoom.disabled = false;
             }
           });
+
+          // Tiempo máximo de espera si la red bloquea WebRTC
+          joinTimeoutId = setTimeout(() => {
+            if (!connectedViaAnyChannel) {
+              el.loginStatus.textContent = `Tiempo agotado buscando la sala "${roomCode}". Revisa el código e intenta de nuevo.`;
+              el.btnJoinRoom.disabled = false;
+            }
+          }, 9000);
         } catch (e) {
           if (!connectedViaAnyChannel) {
             el.loginStatus.textContent = 'Error al conectar. Verifica el código de sala.';
@@ -876,9 +954,12 @@
     });
 
     // Salir de la sala y volver a la pantalla de inicio (Login)
-    el.btnLeaveRoom.addEventListener('click', () => {
+    function leaveCurrentRoom() {
+      clearTimeout(joinTimeoutId);
       if (!isHost) {
-        sendClientAction({ type: 'LEAVE_ROOM' });
+        try {
+          sendClientAction({ type: 'LEAVE_ROOM' });
+        } catch (e) {}
       }
       if (hostConnection) {
         try { hostConnection.close(); } catch (e) {}
@@ -919,9 +1000,15 @@
       el.btnJoinRoom.disabled = false;
       el.gameScreen.classList.add('hidden');
       el.loginScreen.classList.remove('hidden');
-      setTimeout(() => el.usernameInput.focus(), 50);
+      setTimeout(() => {
+        if (el.usernameInput) el.usernameInput.focus();
+      }, 50);
       showToast('Has salido de la sala.', '👋');
-    });
+    }
+
+    if (el.btnLeaveRoom) {
+      el.btnLeaveRoom.addEventListener('click', leaveCurrentRoom);
+    }
 
     function resetAllDice() {
       gameState.dice = [1, 2, 3, 4, 5].map(() => ({

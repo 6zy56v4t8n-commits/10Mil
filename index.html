@@ -158,89 +158,70 @@
   <div id="gameScreen" class="hidden flex-1 flex flex-col max-w-6xl w-full mx-auto p-3 sm:p-4 gap-3 sm:gap-4">
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 1 (SUPERIOR): LOGO 10MIL | JUGADORES LOGUEADOS | INICIAR    -->
+    <!-- SECCIÓN 1 (SUPERIOR): 2 SECTORES (CONTROLES ARRIBA / JUGADORES ABAJO) -->
     <!-- =================================================================== -->
-    <header class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-      <!-- Parte 1 (Izquierda): Logo "10Mil" + Código de Sala -->
-      <div class="md:col-span-3 flex items-center justify-between md:justify-start gap-2.5">
-        <div class="flex items-center gap-2">
-          <div class="bg-emerald-500 text-slate-950 font-black text-xl sm:text-2xl px-3 py-1 rounded-xl tracking-tight shadow">
-            10Mil
+    <header class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-col gap-3">
+      <!-- Sector 1: Logo de Dado a la izquierda + Sala y Botones alineados a la derecha -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-700/80">
+        <div class="flex items-center">
+          <div class="bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-xl shadow flex items-center justify-center text-2xl sm:text-3xl select-none" title="10Mil - Juego de Dados">
+            🎲
           </div>
-          <span id="networkStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" title="Estado de red"></span>
         </div>
-        <button
-          id="btnCopyCode"
-          type="button"
-          title="Copiar código de sala"
-          class="text-xs bg-slate-900 hover:bg-slate-700 border border-slate-600 px-2.5 py-1.5 rounded-lg font-mono font-bold text-sky-400 flex items-center gap-1 cursor-pointer transition"
-        >
-          Sala: <span id="displayRoomCode" class="text-white">----</span> 📋
-        </button>
+
+        <div class="flex items-center gap-1.5 ml-auto">
+          <button
+            id="btnCopyCode"
+            type="button"
+            title="Copiar código de sala"
+            class="text-xs bg-slate-900 hover:bg-slate-700 border border-slate-600 px-2.5 py-2 rounded-xl font-mono font-bold text-sky-400 flex items-center gap-1 cursor-pointer transition"
+          >
+            Sala: <span id="displayRoomCode" class="text-white">----</span>
+          </button>
+          <button
+            id="btnStartGame"
+            type="button"
+            class="px-3.5 sm:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
+          >
+            ▶ Iniciar
+          </button>
+          <button
+            id="btnResetMatch"
+            type="button"
+            title="Terminar partida actual y volver a sala abierta"
+            class="hidden px-2.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition cursor-pointer"
+          >
+            ↻ Reiniciar
+          </button>
+          <button
+            id="btnLeaveRoom"
+            type="button"
+            title="Salir de la sala y volver al inicio"
+            class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer"
+          >
+            Salir
+          </button>
+        </div>
       </div>
 
-      <!-- Parte 2 (Centro): Jugadores Logueados (máx. 5) -->
-      <div class="md:col-span-6 flex flex-col gap-1.5">
-        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-          <span>Jugadores conectados (<span id="playerCountLabel">1</span>/5)</span>
-          <span id="lobbyLockedNote" class="hidden text-amber-400 font-semibold">🔒 Sala cerrada durante partida</span>
-        </div>
-        <div id="playersBadgeList" class="flex flex-wrap items-center gap-1.5 min-h-[34px]">
+      <!-- Sector 2: Jugadores conectados presentados de forma horizontal -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-0.5">
+        <div id="playersBadgeList" class="flex items-center gap-1.5 flex-nowrap sm:flex-wrap">
           <!-- Badges de jugadores generados dinámicamente -->
         </div>
-      </div>
-
-      <!-- Parte 3 (Derecha): Botones Iniciar, Reiniciar y Salir -->
-      <div class="md:col-span-3 flex flex-wrap items-center justify-end gap-1.5">
-        <button
-          id="btnAddLocalBot"
-          type="button"
-          title="Agregar jugador local para probar"
-          class="hidden px-2.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-200 transition cursor-pointer"
-        >
-          + Jugador
-        </button>
-        <button
-          id="btnStartGame"
-          type="button"
-          class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
-        >
-          ▶ Iniciar
-        </button>
-        <button
-          id="btnResetMatch"
-          type="button"
-          title="Terminar partida actual y volver a sala abierta"
-          class="hidden px-2.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition cursor-pointer"
-        >
-          ↻ Reiniciar
-        </button>
-        <button
-          id="btnLeaveRoom"
-          type="button"
-          title="Salir de la sala y volver al inicio"
-          class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer"
-        >
-          Salir
-        </button>
+        <span id="lobbyLockedNote" class="hidden text-[11px] text-amber-400 font-semibold ml-auto shrink-0">
+          🔒 En curso
+        </span>
       </div>
     </header>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 2 (MESA DE DADOS): FLECHA VERDE + 5 DADOS + TURNO Y BOTÓN   -->
+    <!-- SECCIÓN 2 (MESA DE DADOS): 5 DADOS + TURNO Y BOTONES                -->
     <!-- =================================================================== -->
-    <section class="bg-slate-800/95 border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-lg space-y-3 sm:space-y-4">
+    <section class="bg-slate-800/95 border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-lg">
       <div class="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
-        <!-- Flecha Horizontal Verde + Contenedor de 5 Dados -->
-        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto justify-center">
-          <!-- Flecha horizontal en color verde -->
-          <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-emerald-400 font-extrabold text-xs uppercase tracking-wider shrink-0">
-            <span>Dados</span>
-            <svg class="w-6 h-5 text-emerald-400" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 10H32M32 10L24 3M32 10L24 17" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-
+        <!-- Contenedor de 5 Dados -->
+        <div class="flex items-center justify-center w-full lg:w-auto">
           <!-- Las 5 caras de los dados -->
           <div id="diceContainer" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             <!-- 5 dados renderizados dinámicamente -->
@@ -270,7 +251,7 @@
               disabled
               class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-950/50 transition cursor-pointer flex items-center gap-1.5"
             >
-              🎲 Lanzar Dados
+              Lanzar Dados
             </button>
             <button
               id="btnBankPoints"
@@ -283,49 +264,10 @@
           </div>
         </div>
       </div>
-
-      <!-- Barra de ayuda rápida -->
-      <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 border-t border-slate-700/60 pt-2">
-        <span>💡 Toca los dados con puntos (<strong class="text-slate-200">1, 5, tercias o escalera</strong>) para apartarlos antes de volver a lanzar o plantarte.</span>
-        <button id="btnShowRules" type="button" class="text-sky-400 hover:underline font-semibold cursor-pointer">
-          Ver tabla de puntos
-        </button>
-      </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 3 (BLANCA): HISTORIAL Y CUENTA DE CADA JUGADA (COLAPSABLE)  -->
-    <!-- =================================================================== -->
-    <section id="section3History" class="bg-white text-slate-800 border border-slate-300 rounded-2xl shadow-lg flex flex-col overflow-hidden transition-all">
-      <button
-        id="btnToggleHistory"
-        type="button"
-        aria-expanded="false"
-        class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200/80 border-b border-slate-200 flex items-center justify-between text-left transition cursor-pointer"
-      >
-        <div class="flex items-center gap-2">
-          <span id="historyChevron" class="text-slate-600 text-xs transition-transform duration-200">▶</span>
-          <h2 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-700">
-            📋 Registro de Jugadas (<span id="historyCountBadge">0</span>)
-          </h2>
-        </div>
-        <div class="flex items-center gap-2">
-          <span id="historyToggleHint" class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-            Ver lista
-          </span>
-          <span class="hidden sm:inline text-xs text-slate-500 font-medium">Meta: 10,000 pts</span>
-        </div>
-      </button>
-
-      <div id="historyFeed" class="hidden max-h-[260px] overflow-y-auto p-3 sm:p-4 space-y-2.5 history-scroll">
-        <div class="text-center text-slate-400 text-sm py-6">
-          Aquí aparecerá el nombre de cada jugador y el desglose de puntos de sus dados en cada tiro.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- SECCIÓN 4 (INFERIOR COMPACTA): MARCADOR GLOBAL Y GANADOR            -->
+    <!-- SECCIÓN INFERIOR COMPACTA: MARCADOR GLOBAL Y GANADOR                -->
     <!-- =================================================================== -->
     <footer class="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 shadow-lg">
       <!-- Banner de ganador (aparece al llegar a 10,000 puntos) -->
@@ -429,11 +371,8 @@
       btnJoinRoom: document.getElementById('btnJoinRoom'),
       loginStatus: document.getElementById('loginStatus'),
       displayRoomCode: document.getElementById('displayRoomCode'),
-      networkStatusDot: document.getElementById('networkStatusDot'),
       btnCopyCode: document.getElementById('btnCopyCode'),
-      playerCountLabel: document.getElementById('playerCountLabel'),
       playersBadgeList: document.getElementById('playersBadgeList'),
-      btnAddLocalBot: document.getElementById('btnAddLocalBot'),
       btnStartGame: document.getElementById('btnStartGame'),
       btnResetMatch: document.getElementById('btnResetMatch'),
       btnLeaveRoom: document.getElementById('btnLeaveRoom'),
@@ -444,11 +383,6 @@
       selectedPointsDisplay: document.getElementById('selectedPointsDisplay'),
       btnRollDice: document.getElementById('btnRollDice'),
       btnBankPoints: document.getElementById('btnBankPoints'),
-      btnToggleHistory: document.getElementById('btnToggleHistory'),
-      historyChevron: document.getElementById('historyChevron'),
-      historyCountBadge: document.getElementById('historyCountBadge'),
-      historyToggleHint: document.getElementById('historyToggleHint'),
-      historyFeed: document.getElementById('historyFeed'),
       scoreboardCompact: document.getElementById('scoreboardCompact'),
       winnerBanner: document.getElementById('winnerBanner'),
       winnerNameLabel: document.getElementById('winnerNameLabel'),
@@ -483,399 +417,20 @@
       return code;
     }
 
-    // ============================================================================
-    // MOTOR DE REGLAS Y PUNTUACIÓN DEL "10MIL"
-    // ============================================================================
-    function evaluateDiceSelection(values) {
-      if (!values || values.length === 0) {
-        return { points: 0, description: '', allUsed: false, isInstantWin: false };
-      }
-
-      const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
-      values.forEach(v => counts[v]++);
-
-      let points = 0;
-      let usedDiceCount = 0;
-      const parts = [];
-
-      // 1. Verificar Escalera (1-2-3-4-5 o 2-3-4-5-6 con 5 dados)
-      if (values.length === 5) {
-        const sorted = [...values].sort((a, b) => a - b).join('');
-        if (sorted === '12345' || sorted === '23456') {
-          return {
-            points: 1500,
-            description: `Escalera (${sorted.split('').join('-')}) = +1,500 pts`,
-            allUsed: true,
-            isInstantWin: false
-          };
-        }
-      }
-
-      // 2. Verificar grupos de 3, 4 o 5 iguales
-      for (let num = 1; num <= 6; num++) {
-        const c = counts[num];
-        if (c >= 3) {
-          if (c === 5) {
-            return {
-              points: 10000,
-              description: `¡5 dados de ${num}! = +10,000 pts (10Mil directo)`,
-              allUsed: true,
-              isInstantWin: true
-            };
-          }
-          const baseThree = num === 1 ? 1000 : num * 100;
-          const groupPoints = c === 4 ? baseThree * 2 : baseThree;
-          points += groupPoints;
-          usedDiceCount += c;
-          parts.push(`${c === 4 ? 'Cuatro' : 'Tres'} ${num}s (+${groupPoints})`);
-          counts[num] = 0;
-        }
-      }
-
-      // 3. Puntos individuales restantes: 1s (100 pts) y 5s (50 pts)
-      if (counts[1] > 0) {
-        const p = counts[1] * 100;
-        points += p;
-        usedDiceCount += counts[1];
-        parts.push(`${counts[1]}×[1] (+${p})`);
-      }
-      if (counts[5] > 0) {
-        const p = counts[5] * 50;
-        points += p;
-        usedDiceCount += counts[5];
-        parts.push(`${counts[5]}×[5] (+${p})`);
-      }
-
-      return {
-        points,
-        description: parts.join(' + '),
-        allUsed: usedDiceCount === values.length && values.length > 0,
-        isInstantWin: false
-      };
-    }
-
-    // ============================================================================
-    // CONEXIÓN Y SALAS (INSTANTÁNEA + PEERJS + BROADCASTCHANNEL)
-    // ============================================================================
-    el.btnCreateRoom.addEventListener('click', () => {
-      const name = el.usernameInput.value.trim();
-      if (!name) {
-        showToast('Por favor escribe tu nombre antes de crear la sala.', '⚠️');
-        el.usernameInput.focus();
+    function setLoginStatus(msg, show = true) {
+      if (!show) {
+        el.loginStatus.classList.add('hidden');
         return;
       }
-      myName = name;
-      isHost = true;
-      roomCode = generateRoomCode();
-      initHostRoom();
-    });
-
-    el.btnJoinRoom.addEventListener('click', () => {
-      const name = el.usernameInput.value.trim();
-      const code = el.roomCodeInput.value.trim().toUpperCase();
-      if (!name) {
-        showToast('Por favor escribe tu nombre primero.', '⚠️');
-        el.usernameInput.focus();
-        return;
-      }
-      if (code.length !== 4) {
-        showToast('Ingresa el código de 4 letras de la sala.', '⚠️');
-        el.roomCodeInput.focus();
-        return;
-      }
-      myName = name;
-      isHost = false;
-      roomCode = code;
-      initClientRoom();
-    });
-
-    function initHostRoom() {
-      myPeerId = ROOM_PREFIX + roomCode;
-      gameState.players = [{
-        id: myPeerId,
-        name: myName,
-        score: 0,
-        isHost: true,
-        isLocalBot: false
-      }];
-
-      if (el.networkStatusDot) {
-        el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
-        el.networkStatusDot.title = 'Registrando sala en línea...';
-      }
-
-      // 1. Entrar de inmediato al tablero
-      enterGameScreen();
-
-      // 2. Activar sincronización entre pestañas del mismo navegador
-      setupLocalChannelHost();
-
-      // 3. Abrir conexión P2P en línea para otros dispositivos
-      if (typeof Peer !== 'undefined') {
-        try {
-          if (peer) {
-            try { peer.destroy(); } catch (e) {}
-          }
-          peer = new Peer(myPeerId, PEER_CONFIG);
-
-          peer.on('open', (id) => {
-            myPeerId = id;
-            if (gameState.players[0]) {
-              gameState.players[0].id = id;
-            }
-            if (el.networkStatusDot) {
-              el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-              el.networkStatusDot.title = 'Sala en línea lista para invitados';
-            }
-            showToast(`Sala ${roomCode} en línea. Ya pueden unirse desde otro dispositivo.`, '🌐');
-            renderAll();
-          });
-
-          peer.on('connection', (conn) => {
-            conn.on('open', () => {
-              clientConnections[conn.peer] = conn;
-            });
-            conn.on('data', (data) => {
-              clientConnections[conn.peer] = conn;
-              handleHostIncomingData(conn.peer, data, (payload) => {
-                if (conn.open) conn.send(payload);
-              });
-            });
-            conn.on('close', () => handleClientDisconnect(conn.peer));
-            conn.on('error', () => handleClientDisconnect(conn.peer));
-          });
-
-          peer.on('error', (err) => {
-            if (err && err.type === 'unavailable-id') {
-              // Si el código chocó en la nube, generar otro automáticamente
-              roomCode = generateRoomCode();
-              el.displayRoomCode.textContent = roomCode;
-              initHostRoom();
-              return;
-            }
-            if (el.networkStatusDot) {
-              el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
-              el.networkStatusDot.title = 'Solo modo local/mismo navegador';
-            }
-          });
-        } catch (e) {
-          // Continuar en modo local sin bloquear
-        }
-      }
-    }
-
-    function setupLocalChannelHost() {
-      if (typeof BroadcastChannel === 'undefined') return;
-      if (localChannel) localChannel.close();
-      localChannel = new BroadcastChannel(ROOM_PREFIX + roomCode);
-      localChannel.onmessage = (event) => {
-        const msg = event.data;
-        if (!msg || !msg.senderId) return;
-        handleHostIncomingData(msg.senderId, msg, (payload) => {
-          localChannel.postMessage({ ...payload, targetId: msg.senderId });
-        });
-      };
-    }
-
-    function initClientRoom() {
+      el.loginStatus.textContent = msg;
       el.loginStatus.classList.remove('hidden');
-      el.loginStatus.textContent = `Conectando a la sala ${roomCode}...`;
-      el.btnJoinRoom.disabled = true;
-      clearTimeout(joinTimeoutId);
-
-      const clientFallbackId = 'invitado-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-      myPeerId = clientFallbackId;
-      let connectedViaAnyChannel = false;
-
-      // 1. Canal entre pestañas del mismo navegador
-      if (typeof BroadcastChannel !== 'undefined') {
-        if (localChannel) localChannel.close();
-        localChannel = new BroadcastChannel(ROOM_PREFIX + roomCode);
-        localChannel.onmessage = (event) => {
-          const data = event.data;
-          if (!data) return;
-          if (data.targetId && data.targetId !== myPeerId && data.type !== 'STATE_UPDATE') return;
-
-          if (data.type === 'JOIN_REJECTED') {
-            clearTimeout(joinTimeoutId);
-            showToast(data.reason || 'No se pudo entrar a la sala.', '🚫');
-            el.loginStatus.textContent = data.reason;
-            el.btnJoinRoom.disabled = false;
-            return;
-          }
-          if (data.type === 'STATE_UPDATE') {
-            clearTimeout(joinTimeoutId);
-            connectedViaAnyChannel = true;
-            gameState = data.state;
-            if (el.gameScreen.classList.contains('hidden')) {
-              enterGameScreen();
-              showToast(`Te uniste a la sala ${roomCode}`, '🎉');
-            }
-            renderAll();
-          }
-        };
-        localChannel.postMessage({ type: 'JOIN_REQUEST', name: myName, senderId: myPeerId });
-      }
-
-      // 2. Conexión P2P por internet (PeerJS)
-      if (typeof Peer !== 'undefined') {
-        try {
-          if (peer) {
-            try { peer.destroy(); } catch (e) {}
-          }
-          peer = new Peer(clientFallbackId, PEER_CONFIG);
-
-          peer.on('open', (id) => {
-            myPeerId = id;
-            const targetHostId = ROOM_PREFIX + roomCode;
-            const conn = peer.connect(targetHostId, { reliable: true });
-            hostConnection = conn;
-
-            conn.on('open', () => {
-              conn.send({ type: 'JOIN_REQUEST', name: myName, peerId: myPeerId });
-            });
-
-            conn.on('data', (data) => {
-              if (data.type === 'JOIN_REJECTED') {
-                clearTimeout(joinTimeoutId);
-                showToast(data.reason || 'No se pudo entrar a la sala.', '🚫');
-                el.loginStatus.textContent = data.reason;
-                el.btnJoinRoom.disabled = false;
-                try { peer.destroy(); } catch (e) {}
-                return;
-              }
-              if (data.type === 'STATE_UPDATE') {
-                clearTimeout(joinTimeoutId);
-                connectedViaAnyChannel = true;
-                if (el.networkStatusDot) {
-                  el.networkStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                }
-                gameState = data.state;
-                if (el.gameScreen.classList.contains('hidden')) {
-                  enterGameScreen();
-                  showToast(`Te uniste a la sala ${roomCode}`, '🎉');
-                }
-                renderAll();
-              }
-            });
-
-            conn.on('close', () => {
-              showToast('El anfitrión cerró la sala o se desconectó.', '🔌');
-            });
-          });
-
-          peer.on('error', () => {
-            if (!connectedViaAnyChannel) {
-              clearTimeout(joinTimeoutId);
-              el.loginStatus.textContent = `No se encontró la sala "${roomCode}". Verifica que el anfitrión tenga el punto verde activo.`;
-              el.btnJoinRoom.disabled = false;
-            }
-          });
-
-          // Tiempo máximo de espera si la red bloquea WebRTC
-          joinTimeoutId = setTimeout(() => {
-            if (!connectedViaAnyChannel) {
-              el.loginStatus.textContent = `Tiempo agotado buscando la sala "${roomCode}". Revisa el código e intenta de nuevo.`;
-              el.btnJoinRoom.disabled = false;
-            }
-          }, 9000);
-        } catch (e) {
-          if (!connectedViaAnyChannel) {
-            el.loginStatus.textContent = 'Error al conectar. Verifica el código de sala.';
-            el.btnJoinRoom.disabled = false;
-          }
-        }
-      }
     }
 
-    function sendClientAction(actionPayload) {
-      if (hostConnection && hostConnection.open) {
-        hostConnection.send(actionPayload);
-      }
-      if (localChannel) {
-        localChannel.postMessage({ ...actionPayload, senderId: myPeerId });
-      }
+    function setNetworkIndicator(state) {
+      // Indicador visual desactivado por diseño limpio de encabezado
     }
 
-    function handleHostIncomingData(senderId, msg, replyFn) {
-      if (msg.type === 'JOIN_REQUEST') {
-        if (gameState.players.some(p => p.id === senderId)) {
-          replyFn({ type: 'STATE_UPDATE', state: gameState });
-          return;
-        }
-        if (gameState.phase === 'PLAYING') {
-          replyFn({
-            type: 'JOIN_REJECTED',
-            reason: 'La partida ya inició. Espera a que termine para entrar.'
-          });
-          return;
-        }
-        if (gameState.players.length >= MAX_PLAYERS) {
-          replyFn({
-            type: 'JOIN_REJECTED',
-            reason: 'La sala está llena (máximo 5 jugadores).'
-          });
-          return;
-        }
-
-        if (peer && peer.connections && peer.connections[senderId]) {
-          const activeConn = peer.connections[senderId].find(c => c.open);
-          if (activeConn) clientConnections[senderId] = activeConn;
-        }
-
-        gameState.players.push({
-          id: senderId,
-          name: (msg.name || 'Jugador').slice(0, 16),
-          score: 0,
-          isHost: false,
-          isLocalBot: false
-        });
-
-        broadcastState();
-        showToast(`${msg.name} se unió a la sala`, '👋');
-        return;
-      }
-
-      if (msg.type === 'ACTION_ROLL') {
-        hostRollDice(senderId);
-      } else if (msg.type === 'ACTION_TOGGLE_DIE') {
-        hostToggleDie(senderId, msg.index);
-      } else if (msg.type === 'ACTION_BANK') {
-        hostBankPoints(senderId);
-      } else if (msg.type === 'LEAVE_ROOM') {
-        handleClientDisconnect(senderId);
-      }
-    }
-
-    function handleClientDisconnect(peerId) {
-      delete clientConnections[peerId];
-      const idx = gameState.players.findIndex(p => p.id === peerId);
-      if (idx !== -1) {
-        const leftName = gameState.players[idx].name;
-        gameState.players.splice(idx, 1);
-        if (gameState.currentPlayerIndex >= gameState.players.length) {
-          gameState.currentPlayerIndex = 0;
-        }
-        showToast(`${leftName} salió de la sala`, '🚪');
-        broadcastState();
-      }
-    }
-
-    function broadcastState() {
-      renderAll();
-      if (isHost) {
-        Object.values(clientConnections).forEach(conn => {
-          if (conn && conn.open) {
-            conn.send({ type: 'STATE_UPDATE', state: gameState });
-          }
-        });
-        if (localChannel) {
-          localChannel.postMessage({ type: 'STATE_UPDATE', state: gameState });
-        }
-      }
-    }
-
-    function enterGameScreen() {
+    function enterGameBoard() {
       el.loginScreen.classList.add('hidden');
       el.gameScreen.classList.remove('hidden');
       el.displayRoomCode.textContent = roomCode;
@@ -883,102 +438,172 @@
     }
 
     // ============================================================================
-    // ACCIONES DE LA SECCIÓN 1 (LOBBY / INICIAR PARTIDA)
+    // LÓGICA DE PUNTUACIÓN DEL "10MIL"
     // ============================================================================
-    el.btnCopyCode.addEventListener('click', () => {
-      const tempInput = document.createElement('input');
-      tempInput.value = roomCode;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      showToast(`Código ${roomCode} copiado al portapapeles`, '📋');
-    });
+    function evaluateDice(values) {
+      if (!values || values.length === 0) {
+        return { points: 0, scoringIndices: [], description: 'Sin dados' };
+      }
 
-    const SAMPLE_NAMES = ['Leonardo', 'Sofía', 'Mateo', 'Valeria', 'Carlos'];
-    el.btnAddLocalBot.addEventListener('click', () => {
-      if (!isHost || gameState.phase === 'PLAYING') return;
-      if (gameState.players.length >= MAX_PLAYERS) {
-        showToast('Ya hay 5 jugadores en la sala.', '⚠️');
+      const counts = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+      values.forEach((v, idx) => {
+        if (counts[v]) counts[v].push(idx);
+      });
+
+      const uniqueNums = Object.keys(counts).filter(k => counts[k].length > 0).map(Number);
+
+      // Escalera de 5 dados (1-2-3-4-5 o 2-3-4-5-6)
+      if (values.length === 5 && uniqueNums.length === 5) {
+        const sorted = [...uniqueNums].sort((a, b) => a - b);
+        const isLowStraight = sorted.join(',') === '1,2,3,4,5';
+        const isHighStraight = sorted.join(',') === '2,3,4,5,6';
+        if (isLowStraight || isHighStraight) {
+          return {
+            points: 1500,
+            scoringIndices: [0, 1, 2, 3, 4],
+            description: `Escalera (${sorted.join('-')}) = 1,500 pts`
+          };
+        }
+      }
+
+      let totalPoints = 0;
+      const scoringIndices = [];
+      const parts = [];
+
+      for (let num = 1; num <= 6; num++) {
+        const idxs = counts[num];
+        const count = idxs.length;
+        if (count === 0) continue;
+
+        if (count === 5) {
+          totalPoints += 10000;
+          scoringIndices.push(...idxs);
+          parts.push(`¡Cinco ${num}s! = 10,000 pts`);
+        } else if (count === 4) {
+          const base = num === 1 ? 1000 : num * 100;
+          const pts = base * 2;
+          totalPoints += pts;
+          scoringIndices.push(...idxs);
+          parts.push(`Cuatro ${num}s = ${pts.toLocaleString()} pts`);
+        } else if (count === 3) {
+          const pts = num === 1 ? 1000 : num * 100;
+          totalPoints += pts;
+          scoringIndices.push(...idxs);
+          parts.push(`Tres ${num}s = ${pts.toLocaleString()} pts`);
+        } else {
+          if (num === 1) {
+            const pts = count * 100;
+            totalPoints += pts;
+            scoringIndices.push(...idxs);
+            parts.push(`${count}×[1] = ${pts} pts`);
+          } else if (num === 5) {
+            const pts = count * 50;
+            totalPoints += pts;
+            scoringIndices.push(...idxs);
+            parts.push(`${count}×[5] = ${pts} pts`);
+          }
+        }
+      }
+
+      return {
+        points: totalPoints,
+        scoringIndices: scoringIndices.sort((a, b) => a - b),
+        description: parts.length > 0 ? parts.join(' + ') : 'Sin combinación válida'
+      };
+    }
+
+    function getSelectedScore() {
+      const selectedDice = gameState.dice.filter(d => !d.locked && d.selected);
+      if (selectedDice.length === 0) return { points: 0, valid: false, description: '' };
+      const values = selectedDice.map(d => d.value);
+      const evalResult = evaluateDice(values);
+      const allSelectedContribute = evalResult.scoringIndices.length === values.length && evalResult.points > 0;
+      return {
+        points: allSelectedContribute ? evalResult.points : 0,
+        valid: allSelectedContribute,
+        description: evalResult.description
+      };
+    }
+
+    function hasAnyScoringOption() {
+      const freeDice = gameState.dice.filter(d => !d.locked);
+      const evalResult = evaluateDice(freeDice.map(d => d.value));
+      return evalResult.points > 0;
+    }
+
+    // ============================================================================
+    // CONEXIÓN MULTIJUGADOR (PEERJS + BROADCASTCHANNEL)
+    // ============================================================================
+    function setupLocalChannel(code) {
+      if (localChannel) {
+        try { localChannel.close(); } catch (_) {}
+      }
+      if (typeof BroadcastChannel !== 'undefined') {
+        localChannel = new BroadcastChannel(ROOM_PREFIX + code);
+        localChannel.onmessage = (event) => {
+          const msg = event.data;
+          if (!msg || msg.senderId === myPeerId) return;
+          if (isHost) {
+            handleClientMessage(msg, null);
+          } else if (msg.type === 'STATE_SYNC') {
+            gameState = msg.state;
+            renderAll();
+          } else if (msg.type === 'ERROR_MSG' && msg.targetId === myPeerId) {
+            showToast(msg.message, '⚠️');
+            leaveCurrentRoom(false);
+          }
+        };
+      }
+    }
+
+    function broadcastState() {
+      if (!isHost) return;
+      const payload = { type: 'STATE_SYNC', senderId: myPeerId, state: gameState };
+      Object.values(clientConnections).forEach(conn => {
+        if (conn && conn.open) {
+          try { conn.send(payload); } catch (_) {}
+        }
+      });
+      if (localChannel) {
+        try { localChannel.postMessage(payload); } catch (_) {}
+      }
+      renderAll();
+    }
+
+    function sendActionToHost(actionPayload) {
+      actionPayload.senderId = myPeerId;
+      if (isHost) {
+        handleClientMessage(actionPayload, null);
         return;
       }
-      const usedNames = gameState.players.map(p => p.name);
-      const nextName = SAMPLE_NAMES.find(n => !usedNames.includes(n)) || `Jugador ${gameState.players.length + 1}`;
-      gameState.players.push({
-        id: 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
-        name: nextName,
-        score: 0,
-        isHost: false,
-        isLocalBot: true
-      });
-      broadcastState();
-      showToast(`${nextName} agregado a la sala`, '➕');
-    });
-
-    el.btnStartGame.addEventListener('click', () => {
-      if (!isHost) return;
-      if (gameState.phase === 'PLAYING') return;
-
-      gameState.phase = 'PLAYING';
-      gameState.winnerName = '';
-      gameState.currentPlayerIndex = 0;
-      gameState.turnAccumulated = 0;
-      gameState.hasRolledInCurrentTurn = false;
-      gameState.history = [];
-      gameState.players.forEach(p => (p.score = 0));
-      resetAllDice();
-
-      addHistoryEntry(
-        'Sistema',
-        `¡Inicia la partida con ${gameState.players.length} jugador(es)! Turno de ${gameState.players[0].name}.`,
-        0,
-        'info'
-      );
-      broadcastState();
-    });
-
-    // Terminar partida en curso y volver al estado de sala abierta (Lobby)
-    el.btnResetMatch.addEventListener('click', () => {
-      if (!isHost) return;
-      gameState.phase = 'LOBBY';
-      gameState.winnerName = '';
-      gameState.currentPlayerIndex = 0;
-      gameState.turnAccumulated = 0;
-      gameState.hasRolledInCurrentTurn = false;
-      gameState.history = [];
-      gameState.players.forEach(p => (p.score = 0));
-      resetAllDice();
-      broadcastState();
-      showToast('Partida cerrada. La sala está abierta de nuevo para iniciar.', '🔄');
-    });
-
-    // Salir de la sala y volver a la pantalla de inicio (Login)
-    function leaveCurrentRoom() {
-      clearTimeout(joinTimeoutId);
-      if (!isHost) {
-        try {
-          sendClientAction({ type: 'LEAVE_ROOM' });
-        } catch (e) {}
-      }
-      if (hostConnection) {
-        try { hostConnection.close(); } catch (e) {}
-        hostConnection = null;
-      }
-      if (peer) {
-        try { peer.destroy(); } catch (e) {}
-        peer = null;
+      if (hostConnection && hostConnection.open) {
+        try { hostConnection.send(actionPayload); } catch (_) {}
       }
       if (localChannel) {
-        try { localChannel.close(); } catch (e) {}
-        localChannel = null;
+        try { localChannel.postMessage(actionPayload); } catch (_) {}
+      }
+    }
+
+    // ============================================================================
+    // CREAR SALA (ANFITRIÓN)
+    // ============================================================================
+    el.btnCreateRoom.addEventListener('click', () => {
+      const name = el.usernameInput.value.trim();
+      if (!name) {
+        showToast('Por favor escribe tu nombre primero.', '✍️');
+        el.usernameInput.focus();
+        return;
       }
 
-      isHost = false;
-      roomCode = '';
+      myName = name;
+      isHost = true;
+      roomCode = generateRoomCode();
+      myPeerId = ROOM_PREFIX + roomCode;
       clientConnections = {};
+
       gameState = {
         phase: 'LOBBY',
-        players: [],
+        players: [{ id: myPeerId, name: myName, score: 0, isHost: true, isLocalBot: false }],
         currentPlayerIndex: 0,
         dice: [
           { value: 1, locked: false, selected: false },
@@ -994,243 +619,499 @@
         winnerName: ''
       };
 
-      el.loginStatus.classList.add('hidden');
-      el.btnCreateRoom.disabled = false;
-      el.btnJoinRoom.disabled = false;
+      setupLocalChannel(roomCode);
+      setNetworkIndicator('connecting');
+      enterGameBoard();
+      showToast(`Sala ${roomCode} creada. ¡Comparte el código!`, '🎉');
+
+      try {
+        if (typeof Peer !== 'undefined') {
+          peer = new Peer(myPeerId, PEER_CONFIG);
+          peer.on('open', () => {
+            setNetworkIndicator('online');
+          });
+          peer.on('connection', (conn) => {
+            conn.on('open', () => {
+              clientConnections[conn.peer] = conn;
+            });
+            conn.on('data', (data) => {
+              handleClientMessage(data, conn);
+            });
+            conn.on('close', () => {
+              delete clientConnections[conn.peer];
+              removePlayerById(conn.peer);
+            });
+          });
+          peer.on('error', () => {
+            setNetworkIndicator('local');
+          });
+        } else {
+          setNetworkIndicator('local');
+        }
+      } catch (_) {
+        setNetworkIndicator('local');
+      }
+    });
+
+    // ============================================================================
+    // UNIRSE A SALA (INVITADO)
+    // ============================================================================
+    el.btnJoinRoom.addEventListener('click', () => {
+      const name = el.usernameInput.value.trim();
+      const code = el.roomCodeInput.value.trim().toUpperCase();
+
+      if (!name) {
+        showToast('Escribe tu nombre antes de unirte.', '✍️');
+        el.usernameInput.focus();
+        return;
+      }
+      if (code.length !== 4) {
+        showToast('Ingresa el código de 4 letras de la sala.', '🔑');
+        el.roomCodeInput.focus();
+        return;
+      }
+
+      myName = name;
+      isHost = false;
+      roomCode = code;
+      myPeerId = 'guest-' + Math.random().toString(36).substring(2, 9);
+      const hostPeerId = ROOM_PREFIX + roomCode;
+
+      setLoginStatus(`Conectando a la sala ${roomCode}...`, true);
+      setupLocalChannel(roomCode);
+
+      let joinedSuccessfully = false;
+      const joinMessage = { type: 'JOIN_REQUEST', senderId: myPeerId, name: myName };
+
+      if (localChannel) {
+        const tempListener = (ev) => {
+          if (ev.data && ev.data.type === 'STATE_SYNC' && !joinedSuccessfully) {
+            const exists = ev.data.state.players.some(p => p.id === myPeerId);
+            if (exists) {
+              joinedSuccessfully = true;
+              clearTimeout(joinTimeoutId);
+              setLoginStatus('', false);
+              setNetworkIndicator('local');
+              gameState = ev.data.state;
+              enterGameBoard();
+              showToast(`Conectado a la sala ${roomCode}`, '✅');
+            }
+          }
+        };
+        localChannel.addEventListener('message', tempListener);
+        setTimeout(() => {
+          if (!joinedSuccessfully && localChannel) {
+            localChannel.postMessage(joinMessage);
+          }
+        }, 150);
+      }
+
+      try {
+        if (typeof Peer !== 'undefined') {
+          peer = new Peer(myPeerId, PEER_CONFIG);
+          peer.on('open', () => {
+            hostConnection = peer.connect(hostPeerId, { reliable: true });
+            hostConnection.on('open', () => {
+              hostConnection.send(joinMessage);
+            });
+            hostConnection.on('data', (data) => {
+              if (data.type === 'STATE_SYNC') {
+                if (!joinedSuccessfully) {
+                  joinedSuccessfully = true;
+                  clearTimeout(joinTimeoutId);
+                  setLoginStatus('', false);
+                  setNetworkIndicator('online');
+                  enterGameBoard();
+                  showToast(`Conectado a la sala ${roomCode}`, '✅');
+                }
+                gameState = data.state;
+                renderAll();
+              } else if (data.type === 'ERROR_MSG') {
+                clearTimeout(joinTimeoutId);
+                setLoginStatus('', false);
+                showToast(data.message, '🚫');
+                leaveCurrentRoom(false);
+              }
+            });
+            hostConnection.on('close', () => {
+              if (joinedSuccessfully) {
+                showToast('El anfitrión cerró la sala.', '🔌');
+                leaveCurrentRoom(false);
+              }
+            });
+          });
+          peer.on('error', (err) => {
+            if (!joinedSuccessfully && err.type === 'peer-unavailable') {
+              clearTimeout(joinTimeoutId);
+              setLoginStatus('', false);
+              showToast(`La sala ${roomCode} no existe o aún no está lista.`, '❌');
+              leaveCurrentRoom(false);
+            }
+          });
+        }
+      } catch (_) {}
+
+      joinTimeoutId = setTimeout(() => {
+        if (!joinedSuccessfully) {
+          setLoginStatus('', false);
+          showToast(`No se encontró la sala ${roomCode}. Verifica el código.`, '⏳');
+          leaveCurrentRoom(false);
+        }
+      }, 9000);
+    });
+
+    // ============================================================================
+    // SALIR Y REINICIAR SALA
+    // ============================================================================
+    function leaveCurrentRoom(notifyOthers = true) {
+      clearTimeout(joinTimeoutId);
+      if (notifyOthers && !isHost && myPeerId) {
+        sendActionToHost({ type: 'LEAVE_ROOM', playerId: myPeerId });
+      }
+      if (hostConnection) {
+        try { hostConnection.close(); } catch (_) {}
+        hostConnection = null;
+      }
+      Object.values(clientConnections).forEach(c => {
+        try { c.close(); } catch (_) {}
+      });
+      clientConnections = {};
+      if (peer) {
+        try { peer.destroy(); } catch (_) {}
+        peer = null;
+      }
+      if (localChannel) {
+        try { localChannel.close(); } catch (_) {}
+        localChannel = null;
+      }
+
+      isHost = false;
+      roomCode = '';
+      setLoginStatus('', false);
       el.gameScreen.classList.add('hidden');
       el.loginScreen.classList.remove('hidden');
-      setTimeout(() => {
-        if (el.usernameInput) el.usernameInput.focus();
-      }, 50);
-      showToast('Has salido de la sala.', '👋');
+      el.usernameInput.focus();
     }
 
-    if (el.btnLeaveRoom) {
-      el.btnLeaveRoom.addEventListener('click', leaveCurrentRoom);
+    el.btnLeaveRoom.addEventListener('click', () => {
+      leaveCurrentRoom(true);
+    });
+
+    el.btnResetMatch.addEventListener('click', () => {
+      if (!isHost) return;
+      gameState.phase = 'LOBBY';
+      gameState.players.forEach(p => { p.score = 0; });
+      gameState.currentPlayerIndex = 0;
+      gameState.turnAccumulated = 0;
+      gameState.hasRolledInCurrentTurn = false;
+      gameState.history = [];
+      gameState.winnerName = '';
+      resetDiceForNewTurn();
+      broadcastState();
+      showToast('Partida reiniciada. Sala abierta nuevamente.', '↻');
+    });
+
+    // ============================================================================
+    // PROCESAMIENTO DE ACCIONES EN EL ANFITRIÓN
+    // ============================================================================
+    function removePlayerById(playerId) {
+      const idx = gameState.players.findIndex(p => p.id === playerId);
+      if (idx === -1) return;
+      const removed = gameState.players[idx];
+      gameState.players.splice(idx, 1);
+
+      if (gameState.players.length === 0) return;
+
+      if (gameState.currentPlayerIndex >= gameState.players.length) {
+        gameState.currentPlayerIndex = 0;
+      }
+      addHistoryEntry(removed.name, 'Salió de la sala', 0, 'info');
+      broadcastState();
     }
 
-    function resetAllDice() {
-      gameState.dice = [1, 2, 3, 4, 5].map(() => ({
-        value: Math.floor(Math.random() * 6) + 1,
+    function handleClientMessage(msg, conn) {
+      if (!isHost || !msg || !msg.type) return;
+
+      switch (msg.type) {
+        case 'JOIN_REQUEST': {
+          if (gameState.phase === 'PLAYING') {
+            const errPayload = { type: 'ERROR_MSG', targetId: msg.senderId, message: 'La partida ya inició. Espera a que termine.' };
+            if (conn && conn.open) conn.send(errPayload);
+            if (localChannel) localChannel.postMessage(errPayload);
+            return;
+          }
+          if (gameState.players.length >= MAX_PLAYERS) {
+            const errPayload = { type: 'ERROR_MSG', targetId: msg.senderId, message: 'La sala está llena (máximo 5 jugadores).' };
+            if (conn && conn.open) conn.send(errPayload);
+            if (localChannel) localChannel.postMessage(errPayload);
+            return;
+          }
+          const alreadyIn = gameState.players.some(p => p.id === msg.senderId);
+          if (!alreadyIn) {
+            gameState.players.push({
+              id: msg.senderId,
+              name: msg.name.slice(0, 16),
+              score: 0,
+              isHost: false,
+              isLocalBot: false
+            });
+          }
+          broadcastState();
+          break;
+        }
+
+        case 'LEAVE_ROOM': {
+          removePlayerById(msg.playerId || msg.senderId);
+          break;
+        }
+
+        case 'TOGGLE_DIE': {
+          if (gameState.phase !== 'PLAYING') return;
+          const activePlayer = gameState.players[gameState.currentPlayerIndex];
+          if (!activePlayer || activePlayer.id !== msg.senderId) return;
+          if (!gameState.hasRolledInCurrentTurn) return;
+
+          const die = gameState.dice[msg.dieIndex];
+          if (die && !die.locked) {
+            die.selected = !die.selected;
+            broadcastState();
+          }
+          break;
+        }
+
+        case 'ROLL_DICE': {
+          if (gameState.phase !== 'PLAYING') return;
+          const activePlayer = gameState.players[gameState.currentPlayerIndex];
+          if (!activePlayer || activePlayer.id !== msg.senderId) return;
+          performRoll(activePlayer);
+          break;
+        }
+
+        case 'BANK_POINTS': {
+          if (gameState.phase !== 'PLAYING') return;
+          const activePlayer = gameState.players[gameState.currentPlayerIndex];
+          if (!activePlayer || activePlayer.id !== msg.senderId) return;
+          performBank(activePlayer);
+          break;
+        }
+      }
+    }
+
+    // ============================================================================
+    // MECÁNICA DEL JUEGO: INICIAR, LANZAR Y PLANTARSE
+    // ============================================================================
+    el.btnCopyCode.addEventListener('click', () => {
+      const tempInput = document.createElement('input');
+      tempInput.value = roomCode;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToast(`Código ${roomCode} copiado al portapapeles`, '📋');
+    });
+
+    el.btnStartGame.addEventListener('click', () => {
+      if (!isHost) return;
+      if (gameState.phase === 'PLAYING') return;
+
+      gameState.phase = 'PLAYING';
+      gameState.players.forEach(p => { p.score = 0; });
+      gameState.currentPlayerIndex = 0;
+      gameState.turnAccumulated = 0;
+      gameState.hasRolledInCurrentTurn = false;
+      gameState.winnerName = '';
+      gameState.history = [];
+      resetDiceForNewTurn();
+
+      addHistoryEntry(gameState.players[0].name, '¡Inicia la partida! Lanza los 5 dados.', 0, 'info');
+      broadcastState();
+    });
+
+    function resetDiceForNewTurn() {
+      gameState.dice = gameState.dice.map(d => ({
+        value: d.value,
         locked: false,
         selected: false
       }));
     }
 
-    // ============================================================================
-    // MECÁNICA DEL TURNO (LANZAR DADOS, SELECCIONAR Y PLANTARSE)
-    // ============================================================================
-    function canActForCurrentPlayer(requesterId) {
-      if (gameState.phase !== 'PLAYING') return false;
-      const activePlayer = gameState.players[gameState.currentPlayerIndex];
-      if (!activePlayer) return false;
-      if (activePlayer.isLocalBot && requesterId === myPeerId) return true;
-      return activePlayer.id === requesterId;
-    }
-
-    el.btnRollDice.addEventListener('click', () => {
-      if (isHost) {
-        hostRollDice(myPeerId);
-      } else {
-        sendClientAction({ type: 'ACTION_ROLL' });
-      }
-    });
-
-    function hostRollDice(requesterId) {
-      if (!canActForCurrentPlayer(requesterId)) return;
-      const activePlayer = gameState.players[gameState.currentPlayerIndex];
-
-      if (gameState.hasRolledInCurrentTurn) {
-        const selectedDice = gameState.dice.filter(d => d.selected && !d.locked);
-        if (selectedDice.length === 0) {
-          showToast('Selecciona al menos un dado que dé puntos antes de volver a lanzar.', '☝️');
-          return;
-        }
-        const evalSel = evaluateDiceSelection(selectedDice.map(d => d.value));
-        if (evalSel.points === 0) {
-          showToast('Los dados seleccionados no forman ninguna combinación válida.', '⚠️');
-          return;
-        }
-
-        gameState.turnAccumulated += evalSel.points;
-        selectedDice.forEach(d => {
-          d.locked = true;
-          d.selected = false;
-        });
-
-        if (gameState.dice.every(d => d.locked)) {
-          gameState.dice.forEach(d => {
-            d.locked = false;
-            d.selected = false;
-          });
-          showToast('🔥 ¡Dado Caliente! Vuelves a lanzar los 5 dados.', '🔥');
-        }
-      }
-
-      gameState.rollingAnimation = true;
-      gameState.hasRolledInCurrentTurn = true;
-      gameState.dice.forEach(d => {
-        if (!d.locked) {
-          d.value = Math.floor(Math.random() * 6) + 1;
-          d.selected = false;
-        }
-      });
-
-      const freeValues = gameState.dice.filter(d => !d.locked).map(d => d.value);
-      const rollEvaluation = evaluateDiceSelection(freeValues);
-
-      broadcastState();
-
-      setTimeout(() => {
-        gameState.rollingAnimation = false;
-
-        if (rollEvaluation.points === 0) {
-          addHistoryEntry(
-            activePlayer.name,
-            `Lanzó [${freeValues.join(', ')}] → Sin puntos (0 pts). Pierde ${gameState.turnAccumulated} pts acumulados en el turno.`,
-            0,
-            'farkle'
-          );
-          advanceToNextPlayer();
-        } else {
-          addHistoryEntry(
-            activePlayer.name,
-            `Lanzó [${freeValues.join(', ')}] → Disponible: ${rollEvaluation.description}`,
-            rollEvaluation.points,
-            'roll'
-          );
-        }
-        broadcastState();
-      }, 420);
-    }
-
-    function onDieClick(index) {
-      if (gameState.phase !== 'PLAYING' || !gameState.hasRolledInCurrentTurn) return;
-      if (isHost) {
-        hostToggleDie(myPeerId, index);
-      } else {
-        sendClientAction({ type: 'ACTION_TOGGLE_DIE', index });
-      }
-    }
-
-    function hostToggleDie(requesterId, index) {
-      if (!canActForCurrentPlayer(requesterId)) return;
-      if (!gameState.hasRolledInCurrentTurn) return;
-      const die = gameState.dice[index];
-      if (!die || die.locked) return;
-
-      die.selected = !die.selected;
-      broadcastState();
-    }
-
-    el.btnBankPoints.addEventListener('click', () => {
-      if (isHost) {
-        hostBankPoints(myPeerId);
-      } else {
-        sendClientAction({ type: 'ACTION_BANK' });
-      }
-    });
-
-    function hostBankPoints(requesterId) {
-      if (!canActForCurrentPlayer(requesterId)) return;
-      if (!gameState.hasRolledInCurrentTurn) return;
-
-      const activePlayer = gameState.players[gameState.currentPlayerIndex];
-      const selectedDice = gameState.dice.filter(d => d.selected && !d.locked);
-      const evalSel = evaluateDiceSelection(selectedDice.map(d => d.value));
-
-      if (selectedDice.length > 0 && evalSel.points === 0) {
-        showToast('Tienes dados seleccionados que no puntúan. Desmárcalos primero.', '⚠️');
-        return;
-      }
-
-      const totalTurnScore = gameState.turnAccumulated + evalSel.points;
-      if (totalTurnScore <= 0) {
-        showToast('Debes apartar al menos un dado con puntos antes de plantarte.', '☝️');
-        return;
-      }
-
-      activePlayer.score += totalTurnScore;
-
-      addHistoryEntry(
-        activePlayer.name,
-        `Se plantó y sumó +${totalTurnScore.toLocaleString()} pts (Total acumulado: ${activePlayer.score.toLocaleString()} pts).`,
-        totalTurnScore,
-        'bank'
-      );
-
-      if (activePlayer.score >= TARGET_SCORE) {
-        gameState.phase = 'FINISHED';
-        gameState.winnerName = activePlayer.name;
-        addHistoryEntry(
-          '🏆 ¡FIN DEL JUEGO!',
-          `${activePlayer.name} alcanzó ${activePlayer.score.toLocaleString()} puntos y gana la partida.`,
-          activePlayer.score,
-          'win'
-        );
-        broadcastState();
-        return;
-      }
-
-      advanceToNextPlayer();
-      broadcastState();
-    }
-
-    function advanceToNextPlayer() {
-      gameState.turnAccumulated = 0;
-      gameState.hasRolledInCurrentTurn = false;
-      gameState.dice.forEach(d => {
-        d.locked = false;
-        d.selected = false;
-      });
-      gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
-    }
-
-    function addHistoryEntry(playerName, detailText, points, kind) {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    function addHistoryEntry(playerName, detailText, pointsEarned, type = 'normal') {
       gameState.history.unshift({
+        id: Date.now() + Math.random(),
         playerName,
         detailText,
-        points,
-        kind,
-        time: timeStr
+        pointsEarned,
+        type,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       });
       if (gameState.history.length > 60) {
         gameState.history.pop();
       }
     }
 
+    function performRoll(activePlayer) {
+      // Si ya había lanzado en este turno, debe apartar al menos un dado válido antes de volver a lanzar
+      if (gameState.hasRolledInCurrentTurn) {
+        const sel = getSelectedScore();
+        if (!sel.valid || sel.points <= 0) {
+          return;
+        }
+        gameState.turnAccumulated += sel.points;
+        gameState.dice.forEach(d => {
+          if (d.selected) {
+            d.locked = true;
+            d.selected = false;
+          }
+        });
+
+        // Dado caliente: si los 5 dados están bloqueados, se liberan todos para seguir sumando
+        if (gameState.dice.every(d => d.locked)) {
+          gameState.dice.forEach(d => {
+            d.locked = false;
+            d.selected = false;
+          });
+          addHistoryEntry(activePlayer.name, '🔥 ¡Dado Caliente! Vuelve a lanzar los 5 dados.', gameState.turnAccumulated, 'hot');
+        }
+      }
+
+      // Generar caras aleatorias para los dados libres
+      const rolledValues = [];
+      gameState.dice.forEach(d => {
+        if (!d.locked) {
+          d.value = Math.floor(Math.random() * 6) + 1;
+          d.selected = false;
+          rolledValues.push(d.value);
+        }
+      });
+
+      gameState.hasRolledInCurrentTurn = true;
+      gameState.rollingAnimation = true;
+
+      const evalFree = evaluateDice(rolledValues);
+      const diceFacesStr = rolledValues.map(v => `[${v}]`).join(' ');
+
+      if (evalFree.points === 0) {
+        // Sin puntos en el tiro: pierde lo acumulado en el turno
+        addHistoryEntry(
+          activePlayer.name,
+          `Tiró ${diceFacesStr} → Sin puntos (pierde ${gameState.turnAccumulated.toLocaleString()} pts del turno)`,
+          0,
+          'farkle'
+        );
+        broadcastState();
+
+        setTimeout(() => {
+          gameState.rollingAnimation = false;
+          advanceToNextPlayer();
+        }, 900);
+        return;
+      }
+
+      addHistoryEntry(
+        activePlayer.name,
+        `Tiró ${diceFacesStr} → ${evalFree.description}`,
+        evalFree.points,
+        'roll'
+      );
+      broadcastState();
+
+      setTimeout(() => {
+        gameState.rollingAnimation = false;
+        broadcastState();
+      }, 450);
+    }
+
+    function performBank(activePlayer) {
+      if (!gameState.hasRolledInCurrentTurn) return;
+
+      const sel = getSelectedScore();
+      if (gameState.dice.some(d => d.selected) && !sel.valid) {
+        return;
+      }
+
+      const turnTotal = gameState.turnAccumulated + sel.points;
+      if (turnTotal <= 0) return;
+
+      activePlayer.score += turnTotal;
+      addHistoryEntry(
+        activePlayer.name,
+        `💰 Se planta y guarda ${turnTotal.toLocaleString()} pts (Total: ${activePlayer.score.toLocaleString()} pts)`,
+        turnTotal,
+        'bank'
+      );
+
+      if (activePlayer.score >= TARGET_SCORE) {
+        gameState.phase = 'FINISHED';
+        gameState.winnerName = activePlayer.name;
+        addHistoryEntry(activePlayer.name, `🏆 ¡Alcanzó ${activePlayer.score.toLocaleString()} puntos y gana el 10Mil!`, activePlayer.score, 'win');
+        broadcastState();
+        return;
+      }
+
+      advanceToNextPlayer();
+    }
+
+    function advanceToNextPlayer() {
+      gameState.turnAccumulated = 0;
+      gameState.hasRolledInCurrentTurn = false;
+      resetDiceForNewTurn();
+      gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.players.length;
+      broadcastState();
+    }
+
     // ============================================================================
-    // RENDERIZADO DE LA INTERFAZ (4 SECCIONES HORIZONTALES)
+    // EVENTOS DE BOTONES DE JUEGO
     // ============================================================================
-    const PIP_PATTERNS = {
-      1: [4],
-      2: [0, 8],
-      3: [0, 4, 8],
-      4: [0, 2, 6, 8],
-      5: [0, 2, 4, 6, 8],
-      6: [0, 2, 3, 5, 6, 8]
-    };
+    el.btnRollDice.addEventListener('click', () => {
+      sendActionToHost({ type: 'ROLL_DICE' });
+    });
+
+    el.btnBankPoints.addEventListener('click', () => {
+      sendActionToHost({ type: 'BANK_POINTS' });
+    });
+
+    // ============================================================================
+    // RENDERIZADO DE LAS 4 SECCIONES
+    // ============================================================================
+    function createDiePipsHTML(value) {
+      const pipMap = {
+        1: [4],
+        2: [0, 8],
+        3: [0, 4, 8],
+        4: [0, 2, 6, 8],
+        5: [0, 2, 4, 6, 8],
+        6: [0, 2, 3, 5, 6, 8]
+      };
+      const activeCells = pipMap[value] || [];
+      let html = '';
+      for (let i = 0; i < 9; i++) {
+        if (activeCells.includes(i)) {
+          const isAce = value === 1 && i === 4;
+          html += `<span class="pip ${isAce ? 'pip-red' : ''}"></span>`;
+        } else {
+          html += `<span></span>`;
+        }
+      }
+      return html;
+    }
 
     function renderAll() {
-      renderSection1Lobby();
+      renderSection1Header();
       renderSection2DiceAndTurn();
-      renderSection3History();
       renderSection4Scoreboard();
     }
 
-    function renderSection1Lobby() {
+    function renderSection1Header() {
       const isPlaying = gameState.phase === 'PLAYING';
-      el.playerCountLabel.textContent = gameState.players.length;
+      el.lobbyLockedNote.classList.toggle('hidden', !isPlaying);
 
       el.playersBadgeList.innerHTML = '';
       gameState.players.forEach((p, idx) => {
         const isCurrentTurn = isPlaying && idx === gameState.currentPlayerIndex;
-        const badge = document.createElement('span');
-        badge.className = `px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border transition ${
+        const badge = document.createElement('div');
+        badge.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ${
           isCurrentTurn
-            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-sm'
+            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
             : 'bg-slate-900 border-slate-700 text-slate-200'
         }`;
         badge.innerHTML = `
@@ -1241,25 +1122,13 @@
         el.playersBadgeList.appendChild(badge);
       });
 
-      if (isHost && !isPlaying && gameState.players.length < MAX_PLAYERS) {
-        el.btnAddLocalBot.classList.remove('hidden');
-      } else {
-        el.btnAddLocalBot.classList.add('hidden');
-      }
-
       if (isPlaying) {
         el.btnStartGame.disabled = true;
-        el.btnStartGame.textContent = 'En Juego...';
-        el.lobbyLockedNote.classList.remove('hidden');
-        if (isHost) {
-          el.btnResetMatch.classList.remove('hidden');
-        } else {
-          el.btnResetMatch.classList.add('hidden');
-        }
+        el.btnStartGame.textContent = 'En curso';
+        el.btnResetMatch.classList.toggle('hidden', !isHost);
       } else {
         el.btnStartGame.disabled = !isHost;
-        el.btnStartGame.textContent = gameState.phase === 'FINISHED' ? '▶ Nuevo Juego' : '▶ Iniciar';
-        el.lobbyLockedNote.classList.add('hidden');
+        el.btnStartGame.textContent = isHost ? '▶ Iniciar' : 'Esperando Host';
         el.btnResetMatch.classList.add('hidden');
       }
     }
@@ -1267,115 +1136,62 @@
     function renderSection2DiceAndTurn() {
       const isPlaying = gameState.phase === 'PLAYING';
       const activePlayer = gameState.players[gameState.currentPlayerIndex];
-      const isMyTurn = isPlaying && activePlayer && (activePlayer.id === myPeerId || (activePlayer.isLocalBot && isHost));
-
-      el.diceContainer.innerHTML = '';
-      gameState.dice.forEach((die, idx) => {
-        const dieBtn = document.createElement('button');
-        dieBtn.type = 'button';
-        dieBtn.disabled = !isMyTurn || !gameState.hasRolledInCurrentTurn || die.locked;
-
-        let borderClass = 'border-slate-300 bg-white';
-        let statusTag = '';
-        if (die.locked) {
-          borderClass = 'border-amber-500 bg-amber-50 opacity-75 ring-2 ring-amber-400/50';
-          statusTag = '<span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 text-[9px] font-black px-1.5 rounded">GUARDADO</span>';
-        } else if (die.selected) {
-          borderClass = 'border-emerald-500 bg-emerald-50 -translate-y-2 ring-4 ring-emerald-400/60 shadow-emerald-500/30';
-          statusTag = '<span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] font-black px-1.5 rounded">APARTADO</span>';
-        } else if (isMyTurn && gameState.hasRolledInCurrentTurn) {
-          borderClass = 'border-slate-300 bg-white hover:border-emerald-400 hover:-translate-y-1 cursor-pointer';
-        }
-
-        dieBtn.className = `relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 shadow-lg die-face ${borderClass} ${
-          gameState.rollingAnimation && !die.locked ? 'rolling' : ''
-        }`;
-        dieBtn.innerHTML = statusTag;
-
-        const activePositions = PIP_PATTERNS[die.value] || [];
-        for (let cell = 0; cell < 9; cell++) {
-          const cellDiv = document.createElement('div');
-          if (activePositions.includes(cell)) {
-            const pip = document.createElement('div');
-            pip.className = `pip ${die.value === 1 ? 'pip-red' : ''}`;
-            cellDiv.appendChild(pip);
-          }
-          dieBtn.appendChild(cellDiv);
-        }
-
-        dieBtn.addEventListener('click', () => onDieClick(idx));
-        el.diceContainer.appendChild(dieBtn);
-      });
+      const isMyTurn = isPlaying && activePlayer && activePlayer.id === myPeerId;
 
       if (!isPlaying) {
         el.currentTurnPlayer.textContent = gameState.phase === 'FINISHED'
           ? `¡Ganó ${gameState.winnerName}!`
-          : 'Pulsa "Iniciar" arriba';
-      } else if (activePlayer) {
-        el.currentTurnPlayer.textContent = isMyTurn
-          ? `${activePlayer.name} (¡Tu turno!)`
-          : activePlayer.name;
+          : 'Esperando inicio...';
+      } else {
+        el.currentTurnPlayer.textContent = activePlayer ? activePlayer.name : '---';
       }
 
-      const selectedValues = gameState.dice
-        .filter(d => d.selected && !d.locked)
-        .map(d => d.value);
-      const selectedEval = evaluateDiceSelection(selectedValues);
-
+      const sel = getSelectedScore();
       el.turnPointsDisplay.textContent = gameState.turnAccumulated.toLocaleString();
-      el.selectedPointsDisplay.textContent = selectedEval.points.toLocaleString();
+      el.selectedPointsDisplay.textContent = sel.points.toLocaleString();
 
-      el.btnRollDice.disabled = !isMyTurn;
-      el.btnRollDice.textContent = gameState.hasRolledInCurrentTurn ? '🎲 Volver a Lanzar' : '🎲 Lanzar Dados';
+      // Renderizar 5 dados
+      el.diceContainer.innerHTML = '';
+      gameState.dice.forEach((die, idx) => {
+        const dieBtn = document.createElement('button');
+        dieBtn.type = 'button';
 
-      const canBank = isMyTurn && gameState.hasRolledInCurrentTurn && (gameState.turnAccumulated + selectedEval.points > 0);
-      el.btnBankPoints.disabled = !canBank;
-    }
-
-    function renderSection3History() {
-      if (el.historyCountBadge) {
-        el.historyCountBadge.textContent = gameState.history.length;
-      }
-
-      if (gameState.history.length === 0) {
-        el.historyFeed.innerHTML = `
-          <div class="text-center text-slate-400 text-sm py-6">
-            Aquí aparecerá el nombre de cada jugador y el desglose de puntos de sus dados en cada tiro.
-          </div>
-        `;
-        return;
-      }
-
-      el.historyFeed.innerHTML = gameState.history.map(item => {
-        let rowBg = 'bg-slate-50 border-slate-200';
-        let badgeColor = 'bg-slate-200 text-slate-700';
-
-        if (item.kind === 'bank') {
-          rowBg = 'bg-emerald-50/80 border-emerald-200';
-          badgeColor = 'bg-emerald-600 text-white';
-        } else if (item.kind === 'farkle') {
-          rowBg = 'bg-rose-50/80 border-rose-200';
-          badgeColor = 'bg-rose-600 text-white';
-        } else if (item.kind === 'win') {
-          rowBg = 'bg-amber-50 border-amber-300';
-          badgeColor = 'bg-amber-500 text-slate-950';
+        let stateClasses = 'bg-slate-100 border-slate-300 hover:scale-105 cursor-pointer';
+        if (die.locked) {
+          stateClasses = 'bg-slate-400/70 border-slate-500 opacity-60 cursor-not-allowed scale-95';
+        } else if (die.selected) {
+          stateClasses = 'bg-amber-100 border-emerald-500 ring-4 ring-emerald-400/70 -translate-y-1.5 shadow-xl cursor-pointer';
         }
 
-        return `
-          <div class="p-2.5 sm:p-3 rounded-xl border ${rowBg} flex flex-col gap-0.5">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-extrabold text-sm text-slate-900">${escapeHtml(item.playerName)}</span>
-              <div class="flex items-center gap-2">
-                ${item.points > 0 ? `<span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${badgeColor}">+${item.points.toLocaleString()} pts</span>` : ''}
-                <span class="text-[11px] text-slate-400 font-mono">${item.time}</span>
-              </div>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-600 font-medium leading-snug">
-              ${escapeHtml(item.detailText)}
-            </p>
-          </div>
-        `;
-      }).join('');
+        if (gameState.rollingAnimation && !die.locked) {
+          stateClasses += ' rolling';
+        }
+
+        dieBtn.className = `die-face w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 shadow-md ${stateClasses}`;
+        dieBtn.innerHTML = createDiePipsHTML(die.value);
+        dieBtn.disabled = !isMyTurn || !gameState.hasRolledInCurrentTurn || die.locked;
+
+        dieBtn.addEventListener('click', () => {
+          if (!isMyTurn || !gameState.hasRolledInCurrentTurn || die.locked) return;
+          sendActionToHost({ type: 'TOGGLE_DIE', dieIndex: idx });
+        });
+
+        el.diceContainer.appendChild(dieBtn);
+      });
+
+      // Estado de botones Lanzar y Plantarse
+      if (!isMyTurn) {
+        el.btnRollDice.disabled = true;
+        el.btnBankPoints.disabled = true;
+      } else if (!gameState.hasRolledInCurrentTurn) {
+        el.btnRollDice.disabled = false;
+        el.btnBankPoints.disabled = true;
+      } else {
+        const hasAnySelected = gameState.dice.some(d => !d.locked && d.selected);
+        el.btnRollDice.disabled = !sel.valid;
+        const canBankNow = (gameState.turnAccumulated + sel.points) > 0 && (!hasAnySelected || sel.valid);
+        el.btnBankPoints.disabled = !canBankNow;
+      }
     }
 
     function renderSection4Scoreboard() {
@@ -1387,59 +1203,34 @@
       }
 
       el.scoreboardCompact.innerHTML = '';
-      gameState.players.forEach((p, idx) => {
-        const isCurrent = gameState.phase === 'PLAYING' && idx === gameState.currentPlayerIndex;
+      gameState.players.forEach(p => {
+        const pill = document.createElement('div');
         const isWinner = gameState.phase === 'FINISHED' && p.name === gameState.winnerName;
-        const pct = Math.min(100, Math.round((p.score / TARGET_SCORE) * 100));
-
-        const card = document.createElement('div');
-        card.className = `px-3 py-1.5 rounded-xl border text-xs flex items-center gap-2 transition ${
+        pill.className = `px-3 py-1 rounded-xl text-xs font-bold border flex items-center gap-2 ${
           isWinner
-            ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black'
-            : isCurrent
-            ? 'bg-emerald-500/15 border-emerald-500/50 text-white font-bold'
-            : 'bg-slate-900/90 border-slate-700 text-slate-300'
+            ? 'bg-amber-400/20 border-amber-400 text-amber-300'
+            : 'bg-slate-900 border-slate-700 text-slate-200'
         }`;
-        card.innerHTML = `
-          <span>${isWinner ? '👑' : isCurrent ? '▶' : '•'} ${escapeHtml(p.name)}:</span>
-          <span class="font-mono font-extrabold text-emerald-400">${p.score.toLocaleString()}</span>
-          <span class="text-[10px] text-slate-500">(${pct}%)</span>
+        pill.innerHTML = `
+          <span>${escapeHtml(p.name)}:</span>
+          <span class="text-emerald-400 font-black">${p.score.toLocaleString()}</span>
         `;
-        el.scoreboardCompact.appendChild(card);
+        el.scoreboardCompact.appendChild(pill);
       });
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // Colapsar / expandir la lista de registro de jugadas
-    let isHistoryExpanded = false;
-    function setHistoryExpanded(expanded) {
-      isHistoryExpanded = expanded;
-      if (isHistoryExpanded) {
-        el.historyFeed.classList.remove('hidden');
-        el.historyChevron.style.transform = 'rotate(90deg)';
-        el.historyToggleHint.textContent = 'Ocultar';
-        el.btnToggleHistory.setAttribute('aria-expanded', 'true');
-      } else {
-        el.historyFeed.classList.add('hidden');
-        el.historyChevron.style.transform = 'rotate(0deg)';
-        el.historyToggleHint.textContent = 'Ver lista';
-        el.btnToggleHistory.setAttribute('aria-expanded', 'false');
-      }
-    }
-
-    if (el.btnToggleHistory) {
-      el.btnToggleHistory.addEventListener('click', () => {
-        setHistoryExpanded(!isHistoryExpanded);
-      });
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
 
     // Eventos del Modal de Reglas
-    el.btnShowRules.addEventListener('click', () => el.rulesModal.classList.remove('hidden'));
+    if (el.btnShowRules) {
+      el.btnShowRules.addEventListener('click', () => el.rulesModal.classList.remove('hidden'));
+    }
     el.btnCloseRules.addEventListener('click', () => el.rulesModal.classList.add('hidden'));
     el.rulesModal.addEventListener('click', (e) => {
       if (e.target === el.rulesModal) el.rulesModal.classList.add('hidden');

@@ -158,136 +158,117 @@
   <div id="gameScreen" class="hidden flex-1 flex flex-col max-w-6xl w-full mx-auto p-3 sm:p-4 gap-3 sm:gap-4">
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 1 (SUPERIOR): LOGO | JUGADORES LOGUEADOS | BOTÓN INICIAR    -->
+    <!-- SECCIÓN 1 (SUPERIOR): LOGO 10MIL | JUGADORES LOGUEADOS | INICIAR    -->
     <!-- =================================================================== -->
-    <section
-      id="section1Lobby"
-      class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg transition-all duration-300"
-    >
-      <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-3">
-        <!-- Parte 1 (Izquierda): Logo 10Mil + Código de sala -->
-        <div class="md:col-span-3 flex items-center justify-between md:justify-start gap-3">
-          <div class="flex items-center gap-2">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 font-black text-lg flex items-center justify-center shadow-md">
-              🎲
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-2xl font-black tracking-tight text-white">10<span class="text-emerald-400">Mil</span></span>
-                <span id="networkStatusDot" title="Estado de red P2P" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="text-[11px] text-slate-400 uppercase font-semibold">Sala:</span>
-                <span id="displayRoomCode" class="text-xs font-mono font-extrabold text-amber-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">----</span>
-                <button
-                  id="btnCopyCode"
-                  type="button"
-                  title="Copiar código de sala"
-                  class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-2 py-0.5 rounded transition cursor-pointer"
-                >
-                  Copiar
-                </button>
-              </div>
-            </div>
+    <header class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+      <!-- Parte 1 (Izquierda): Logo "10Mil" + Código de Sala -->
+      <div class="md:col-span-3 flex items-center justify-between md:justify-start gap-2.5">
+        <div class="flex items-center gap-2">
+          <div class="bg-emerald-500 text-slate-950 font-black text-xl sm:text-2xl px-3 py-1 rounded-xl tracking-tight shadow">
+            10Mil
           </div>
+          <span id="networkStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" title="Estado de red"></span>
         </div>
+        <button
+          id="btnCopyCode"
+          type="button"
+          title="Copiar código de sala"
+          class="text-xs bg-slate-900 hover:bg-slate-700 border border-slate-600 px-2.5 py-1.5 rounded-lg font-mono font-bold text-sky-400 flex items-center gap-1 cursor-pointer transition"
+        >
+          Sala: <span id="displayRoomCode" class="text-white">----</span> 📋
+        </button>
+      </div>
 
-        <!-- Parte 2 (Centro): Jugadores conectados / logueados (Máximo 5) -->
-        <div class="md:col-span-6 flex flex-col items-center justify-center gap-1.5">
-          <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
-            <span>Jugadores en sala (<span id="playerCountLabel">0</span>/5):</span>
-            <button
-              id="btnAddLocalBot"
-              type="button"
-              class="px-2 py-0.5 rounded-md bg-slate-700 hover:bg-slate-600 text-emerald-300 text-[11px] font-bold transition cursor-pointer"
-              title="Agregar jugador local para probar en la misma pantalla"
-            >
-              + Jugador Local
-            </button>
-          </div>
-          <div id="playersBadgeList" class="flex flex-wrap items-center justify-center gap-1.5 min-h-[28px]">
-            <!-- Badges de jugadores logueados -->
-          </div>
+      <!-- Parte 2 (Centro): Jugadores Logueados (máx. 5) -->
+      <div class="md:col-span-6 flex flex-col gap-1.5">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+          <span>Jugadores conectados (<span id="playerCountLabel">1</span>/5)</span>
+          <span id="lobbyLockedNote" class="hidden text-amber-400 font-semibold">🔒 Sala cerrada durante partida</span>
         </div>
-
-        <!-- Parte 3 (Derecha): Botón verde Iniciar + Reiniciar / Salir -->
-        <div class="md:col-span-3 flex items-center justify-center md:justify-end gap-2">
-          <button
-            id="btnStartGame"
-            type="button"
-            class="flex-1 md:flex-initial px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold text-sm sm:text-base shadow-lg shadow-emerald-950/50 transition cursor-pointer"
-          >
-            ▶ Iniciar
-          </button>
-          <button
-            id="btnResetMatch"
-            type="button"
-            title="Terminar partida actual y volver a la sala de espera"
-            class="hidden px-3 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer"
-          >
-            ↻ Reiniciar
-          </button>
-          <button
-            id="btnLeaveRoom"
-            type="button"
-            title="Salir de la sala y volver al inicio"
-            class="px-3 py-3 rounded-xl bg-slate-700 hover:bg-rose-600 text-slate-200 hover:text-white font-bold text-xs sm:text-sm transition cursor-pointer"
-          >
-            Salir
-          </button>
+        <div id="playersBadgeList" class="flex flex-wrap items-center gap-1.5 min-h-[34px]">
+          <!-- Badges de jugadores generados dinámicamente -->
         </div>
       </div>
-      <!-- Banner de estado bloqueado cuando la partida está en curso -->
-      <div id="lobbyLockedNote" class="hidden mt-2 pt-2 border-t border-slate-700/70 text-center text-xs text-amber-300/90 font-medium">
-        🔒 Partida en curso: el ingreso de nuevos jugadores está cerrado hasta que alguien alcance los 10,000 puntos.
+
+      <!-- Parte 3 (Derecha): Botones Iniciar, Reiniciar y Salir -->
+      <div class="md:col-span-3 flex flex-wrap items-center justify-end gap-1.5">
+        <button
+          id="btnAddLocalBot"
+          type="button"
+          title="Agregar jugador local para probar"
+          class="hidden px-2.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-200 transition cursor-pointer"
+        >
+          + Jugador
+        </button>
+        <button
+          id="btnStartGame"
+          type="button"
+          class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
+        >
+          ▶ Iniciar
+        </button>
+        <button
+          id="btnResetMatch"
+          type="button"
+          title="Terminar partida actual y volver a sala abierta"
+          class="hidden px-2.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition cursor-pointer"
+        >
+          ↻ Reiniciar
+        </button>
+        <button
+          id="btnLeaveRoom"
+          type="button"
+          title="Salir de la sala y volver al inicio"
+          class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer"
+        >
+          Salir
+        </button>
       </div>
-    </section>
+    </header>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 2 (DADOS Y TURNO): FLECHA VERDE + 5 DADOS + CONTROL TURNO   -->
+    <!-- SECCIÓN 2 (MESA DE DADOS): FLECHA VERDE + 5 DADOS + TURNO Y BOTÓN   -->
     <!-- =================================================================== -->
-    <section class="bg-slate-800/95 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-lg">
-      <div class="flex flex-col lg:flex-row items-center justify-between gap-5">
-
-        <!-- Izquierda/Centro: Flecha horizontal verde + 5 Caras de Dados -->
-        <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto justify-center">
-          <!-- Flecha horizontal en color verde señalando los dados -->
-          <div class="flex items-center gap-2 text-emerald-400 shrink-0" title="Zona de lanzamiento de los 5 dados">
-            <span class="text-xs font-extrabold uppercase tracking-wider hidden sm:inline">Dados</span>
-            <svg class="w-12 h-8 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.45)]" viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 16H56M56 16L42 5M56 16L42 27" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <section class="bg-slate-800/95 border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-lg space-y-3 sm:space-y-4">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
+        <!-- Flecha Horizontal Verde + Contenedor de 5 Dados -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto justify-center">
+          <!-- Flecha horizontal en color verde -->
+          <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-emerald-400 font-extrabold text-xs uppercase tracking-wider shrink-0">
+            <span>Dados</span>
+            <svg class="w-6 h-5 text-emerald-400" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 10H32M32 10L24 3M32 10L24 17" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
 
-          <!-- Contenedor de los 5 dados de 6 lados -->
-          <div id="diceContainer" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5">
-            <!-- Los 5 dados se renderizan por JavaScript -->
+          <!-- Las 5 caras de los dados -->
+          <div id="diceContainer" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <!-- 5 dados renderizados dinámicamente -->
           </div>
         </div>
 
-        <!-- Derecha: Turno actual + Puntos del turno + Botones de acción -->
-        <div class="flex flex-col sm:flex-row lg:flex-col items-center justify-between gap-3 w-full lg:w-80 bg-slate-900/80 border border-slate-700/80 rounded-xl p-3.5">
-          <div class="text-center lg:text-left w-full">
-            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Turno actual de:</div>
-            <div id="currentTurnPlayer" class="text-xl sm:text-2xl font-black text-emerald-400 truncate">
+        <!-- Apartado del Jugador en Turno y Botones de Acción -->
+        <div class="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 w-full lg:w-auto justify-between lg:justify-end bg-slate-900/80 border border-slate-700/80 px-3.5 py-2.5 rounded-xl">
+          <div class="text-center sm:text-left">
+            <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+              Turno actual
+            </div>
+            <div id="currentTurnPlayer" class="text-base sm:text-lg font-black text-emerald-400 truncate max-w-[190px]">
               Esperando inicio...
             </div>
-            <div class="mt-1 flex items-center justify-center lg:justify-start gap-3 text-xs">
-              <span class="bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-300">
-                Acumulado turno: <strong id="turnPointsDisplay" class="text-amber-300 text-sm">0</strong> pts
-              </span>
-              <span class="bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-slate-300">
-                Selección: <strong id="selectedPointsDisplay" class="text-emerald-300 text-sm">0</strong> pts
-              </span>
+            <div class="text-xs text-slate-300 mt-0.5">
+              Turno: <span id="turnPointsDisplay" class="font-bold text-amber-300">0</span> pts
+              <span class="text-slate-500 mx-1">|</span>
+              Sel: <span id="selectedPointsDisplay" class="font-bold text-sky-300">0</span> pts
             </div>
           </div>
 
-          <div class="flex items-center gap-2 w-full">
+          <div class="flex items-center gap-2">
             <button
               id="btnRollDice"
               type="button"
               disabled
-              class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-sm sm:text-base shadow-md transition cursor-pointer"
+              class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-950/50 transition cursor-pointer flex items-center gap-1.5"
             >
               🎲 Lanzar Dados
             </button>
@@ -295,35 +276,49 @@
               id="btnBankPoints"
               type="button"
               disabled
-              class="py-3 px-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-slate-950 font-extrabold text-sm shadow-md transition cursor-pointer"
-              title="Guardar los puntos acumulados en este turno"
+              class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition cursor-pointer"
             >
-              Plantarse
+              💰 Plantarse
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Ayuda contextual breve debajo de los dados -->
-      <div id="turnHintBar" class="mt-3 pt-2.5 border-t border-slate-700/60 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
-        <span>💡 Haz clic sobre los dados que puntúan (1, 5, tercias, escalera) para apartarlos antes de volver a tirar o plantarte.</span>
-        <button id="btnShowRules" type="button" class="text-emerald-400 hover:underline font-semibold cursor-pointer">Ver tabla de puntos</button>
+      <!-- Barra de ayuda rápida -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 border-t border-slate-700/60 pt-2">
+        <span>💡 Toca los dados con puntos (<strong class="text-slate-200">1, 5, tercias o escalera</strong>) para apartarlos antes de volver a lanzar o plantarte.</span>
+        <button id="btnShowRules" type="button" class="text-sky-400 hover:underline font-semibold cursor-pointer">
+          Ver tabla de puntos
+        </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 3 (BLANCA): HISTORIAL Y CUENTA DE CADA JUGADA               -->
+    <!-- SECCIÓN 3 (BLANCA): HISTORIAL Y CUENTA DE CADA JUGADA (COLAPSABLE)  -->
     <!-- =================================================================== -->
-    <section class="flex-1 min-h-[210px] max-h-[340px] bg-white text-slate-800 border border-slate-300 rounded-2xl shadow-lg flex flex-col overflow-hidden">
-      <div class="px-4 py-2.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
-        <h2 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-700">
-          📋 Registro de Jugadas y Puntuación
-        </h2>
-        <span class="text-xs text-slate-500 font-medium">Meta: 10,000 pts</span>
-      </div>
+    <section id="section3History" class="bg-white text-slate-800 border border-slate-300 rounded-2xl shadow-lg flex flex-col overflow-hidden transition-all">
+      <button
+        id="btnToggleHistory"
+        type="button"
+        aria-expanded="false"
+        class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200/80 border-b border-slate-200 flex items-center justify-between text-left transition cursor-pointer"
+      >
+        <div class="flex items-center gap-2">
+          <span id="historyChevron" class="text-slate-600 text-xs transition-transform duration-200">▶</span>
+          <h2 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-700">
+            📋 Registro de Jugadas (<span id="historyCountBadge">0</span>)
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="historyToggleHint" class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+            Ver lista
+          </span>
+          <span class="hidden sm:inline text-xs text-slate-500 font-medium">Meta: 10,000 pts</span>
+        </div>
+      </button>
 
-      <div id="historyFeed" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2.5 history-scroll">
-        <div class="text-center text-slate-400 text-sm py-8">
+      <div id="historyFeed" class="hidden max-h-[260px] overflow-y-auto p-3 sm:p-4 space-y-2.5 history-scroll">
+        <div class="text-center text-slate-400 text-sm py-6">
           Aquí aparecerá el nombre de cada jugador y el desglose de puntos de sus dados en cada tiro.
         </div>
       </div>
@@ -449,6 +444,10 @@
       selectedPointsDisplay: document.getElementById('selectedPointsDisplay'),
       btnRollDice: document.getElementById('btnRollDice'),
       btnBankPoints: document.getElementById('btnBankPoints'),
+      btnToggleHistory: document.getElementById('btnToggleHistory'),
+      historyChevron: document.getElementById('historyChevron'),
+      historyCountBadge: document.getElementById('historyCountBadge'),
+      historyToggleHint: document.getElementById('historyToggleHint'),
       historyFeed: document.getElementById('historyFeed'),
       scoreboardCompact: document.getElementById('scoreboardCompact'),
       winnerBanner: document.getElementById('winnerBanner'),
@@ -1334,9 +1333,13 @@
     }
 
     function renderSection3History() {
+      if (el.historyCountBadge) {
+        el.historyCountBadge.textContent = gameState.history.length;
+      }
+
       if (gameState.history.length === 0) {
         el.historyFeed.innerHTML = `
-          <div class="text-center text-slate-400 text-sm py-8">
+          <div class="text-center text-slate-400 text-sm py-6">
             Aquí aparecerá el nombre de cada jugador y el desglose de puntos de sus dados en cada tiro.
           </div>
         `;
@@ -1383,26 +1386,56 @@
         el.winnerBanner.classList.add('hidden');
       }
 
-      el.scoreboardCompact.innerHTML = gameState.players.map(p => {
+      el.scoreboardCompact.innerHTML = '';
+      gameState.players.forEach((p, idx) => {
+        const isCurrent = gameState.phase === 'PLAYING' && idx === gameState.currentPlayerIndex;
         const isWinner = gameState.phase === 'FINISHED' && p.name === gameState.winnerName;
-        return `
-          <div class="px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-bold flex items-center gap-2 ${
-            isWinner
-              ? 'bg-amber-500/20 border-amber-400 text-amber-300'
-              : 'bg-slate-900 border-slate-700 text-slate-200'
-          }">
-            <span>${isWinner ? '👑' : '🎲'} ${escapeHtml(p.name)}:</span>
-            <span class="font-mono font-black text-emerald-400">${p.score.toLocaleString()}</span>
-            <span class="text-[10px] text-slate-500">/ 10,000</span>
-          </div>
+        const pct = Math.min(100, Math.round((p.score / TARGET_SCORE) * 100));
+
+        const card = document.createElement('div');
+        card.className = `px-3 py-1.5 rounded-xl border text-xs flex items-center gap-2 transition ${
+          isWinner
+            ? 'bg-amber-500/20 border-amber-400 text-amber-200 font-black'
+            : isCurrent
+            ? 'bg-emerald-500/15 border-emerald-500/50 text-white font-bold'
+            : 'bg-slate-900/90 border-slate-700 text-slate-300'
+        }`;
+        card.innerHTML = `
+          <span>${isWinner ? '👑' : isCurrent ? '▶' : '•'} ${escapeHtml(p.name)}:</span>
+          <span class="font-mono font-extrabold text-emerald-400">${p.score.toLocaleString()}</span>
+          <span class="text-[10px] text-slate-500">(${pct}%)</span>
         `;
-      }).join('');
+        el.scoreboardCompact.appendChild(card);
+      });
     }
 
-    function escapeHtml(str) {
+    function escapeHtml(text) {
       const div = document.createElement('div');
-      div.textContent = str;
+      div.textContent = text;
       return div.innerHTML;
+    }
+
+    // Colapsar / expandir la lista de registro de jugadas
+    let isHistoryExpanded = false;
+    function setHistoryExpanded(expanded) {
+      isHistoryExpanded = expanded;
+      if (isHistoryExpanded) {
+        el.historyFeed.classList.remove('hidden');
+        el.historyChevron.style.transform = 'rotate(90deg)';
+        el.historyToggleHint.textContent = 'Ocultar';
+        el.btnToggleHistory.setAttribute('aria-expanded', 'true');
+      } else {
+        el.historyFeed.classList.add('hidden');
+        el.historyChevron.style.transform = 'rotate(0deg)';
+        el.historyToggleHint.textContent = 'Ver lista';
+        el.btnToggleHistory.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    if (el.btnToggleHistory) {
+      el.btnToggleHistory.addEventListener('click', () => {
+        setHistoryExpanded(!isHistoryExpanded);
+      });
     }
 
     // Eventos del Modal de Reglas

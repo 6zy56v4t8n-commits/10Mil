@@ -8,11 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- PeerJS para conexión multijugador P2P sin servidor propio -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-  <!-- Fuente Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: Tahoma, Geneva, Verdana, sans-serif;
       background-color: #0f172a;
       color: #f8fafc;
     }
@@ -86,12 +84,7 @@
     <div class="w-full max-w-md bg-slate-800/90 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
       <!-- Encabezado con Logo -->
       <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wider uppercase">
-          Multijugador en Línea • Máx. 5 Jugadores
-        </div>
-        <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-white">
-          10<span class="text-emerald-400">Mil</span>
-        </h1>
+        <div class="text-5xl sm:text-6xl leading-none select-none" aria-label="10Mil">🎲</div>
         <p class="text-slate-400 text-sm">
           Ingresa tu nombre para crear una partida o unirte con un código de sala.
         </p>
@@ -158,130 +151,140 @@
   <div id="gameScreen" class="hidden flex-1 flex flex-col max-w-6xl w-full mx-auto p-3 sm:p-4 gap-3 sm:gap-4">
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 1 (SUPERIOR): 2 SECTORES (CONTROLES ARRIBA / JUGADORES ABAJO) -->
+    <!-- SECCIÓN 1: LOGO, SALA, CONTROLES Y TIRA HORIZONTAL DE JUGADORES     -->
     <!-- =================================================================== -->
     <header class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-col gap-3">
-      <!-- Sector 1: Logo de Dado a la izquierda + Sala y Botones alineados a la derecha -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-700/80">
-        <div class="flex items-center">
-          <div class="bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-xl shadow flex items-center justify-center text-2xl sm:text-3xl select-none" title="10Mil - Juego de Dados">
-            🎲
-          </div>
+      <!-- Sector 1: Logo 🎲, Sala alineada a la derecha y botones Iniciar / Salir -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/80 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl sm:text-3xl leading-none select-none" aria-label="10Mil">🎲</span>
         </div>
 
-        <div class="flex items-center gap-1.5 ml-auto">
+        <div class="flex items-center gap-2 ml-auto">
           <button
             id="btnCopyCode"
             type="button"
-            title="Copiar código de sala"
-            class="text-xs bg-slate-900 hover:bg-slate-700 border border-slate-600 px-2.5 py-2 rounded-xl font-mono font-bold text-sky-400 flex items-center gap-1 cursor-pointer transition"
+            title="Tocar para copiar código de sala"
+            class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-600 hover:border-emerald-400 text-xs font-bold text-slate-200 transition cursor-pointer"
           >
-            Sala: <span id="displayRoomCode" class="text-white">----</span>
+            Sala: <span id="displayRoomCode" class="text-emerald-400 tracking-widest font-black">----</span>
           </button>
+
           <button
             id="btnStartGame"
             type="button"
-            class="px-3.5 sm:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-md transition cursor-pointer"
+            class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-bold text-xs shadow transition cursor-pointer"
           >
             ▶ Iniciar
           </button>
+
           <button
             id="btnResetMatch"
             type="button"
-            title="Terminar partida actual y volver a sala abierta"
-            class="hidden px-2.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition cursor-pointer"
+            class="hidden px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition cursor-pointer"
           >
             ↻ Reiniciar
           </button>
+
           <button
             id="btnLeaveRoom"
             type="button"
-            title="Salir de la sala y volver al inicio"
-            class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer"
+            class="px-3 py-1.5 rounded-xl bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer"
           >
             Salir
           </button>
         </div>
       </div>
 
-      <!-- Sector 2: Jugadores conectados presentados de forma horizontal -->
+      <!-- Sector 2: Jugadores conectados en horizontal -->
       <div class="flex items-center gap-2 overflow-x-auto pb-0.5">
-        <div id="playersBadgeList" class="flex items-center gap-1.5 flex-nowrap sm:flex-wrap">
-          <!-- Badges de jugadores generados dinámicamente -->
+        <div id="playersBadgeList" class="flex items-center gap-2">
+          <!-- Badges de jugadores -->
         </div>
-        <span id="lobbyLockedNote" class="hidden text-[11px] text-amber-400 font-semibold ml-auto shrink-0">
-          🔒 En curso
+        <span id="lobbyLockedNote" class="hidden text-[11px] text-amber-300 font-semibold ml-auto whitespace-nowrap">
+          🔒 En juego
         </span>
       </div>
     </header>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN 2 (MESA DE DADOS): 5 DADOS + TURNO Y BOTONES                -->
+    <!-- SECCIÓN 2: TURNO ACTUAL, PUNTOS DEL TURNO, 5 DADOS Y ACCIONES       -->
     <!-- =================================================================== -->
-    <section class="bg-slate-800/95 border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-lg">
-      <div class="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
-        <!-- Contenedor de 5 Dados -->
-        <div class="flex items-center justify-center w-full lg:w-auto">
-          <!-- Las 5 caras de los dados -->
-          <div id="diceContainer" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <!-- 5 dados renderizados dinámicamente -->
-          </div>
+    <section class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-col gap-3">
+      <!-- Barra superior: Turno y contadores de puntos -->
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xs uppercase tracking-wider text-slate-400 font-bold">Turno:</span>
+          <span id="currentTurnPlayer" class="text-sm sm:text-base font-black text-emerald-400">---</span>
         </div>
 
-        <!-- Apartado del Jugador en Turno y Botones de Acción -->
-        <div class="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 w-full lg:w-auto justify-between lg:justify-end bg-slate-900/80 border border-slate-700/80 px-3.5 py-2.5 rounded-xl">
-          <div class="text-center sm:text-left">
-            <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
-              Turno actual
-            </div>
-            <div id="currentTurnPlayer" class="text-base sm:text-lg font-black text-emerald-400 truncate max-w-[190px]">
-              Esperando inicio...
-            </div>
-            <div class="text-xs text-slate-300 mt-0.5">
-              Turno: <span id="turnPointsDisplay" class="font-bold text-amber-300">0</span> pts
-              <span class="text-slate-500 mx-1">|</span>
-              Sel: <span id="selectedPointsDisplay" class="font-bold text-sky-300">0</span> pts
-            </div>
+        <div class="flex items-center gap-3 text-xs sm:text-sm">
+          <div>
+            <span class="text-slate-400">Turno:</span>
+            <span id="turnPointsDisplay" class="font-extrabold text-amber-300 ml-1">0</span>
           </div>
+          <div class="h-4 w-px bg-slate-700"></div>
+          <div>
+            <span class="text-slate-400">Selección:</span>
+            <span id="selectedPointsDisplay" class="font-extrabold text-sky-300 ml-1">0</span>
+          </div>
+        </div>
+      </div>
 
-          <div class="flex items-center gap-2">
-            <button
-              id="btnRollDice"
-              type="button"
-              disabled
-              class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-950/50 transition cursor-pointer flex items-center gap-1.5"
-            >
-              Lanzar Dados
-            </button>
-            <button
-              id="btnBankPoints"
-              type="button"
-              disabled
-              class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition cursor-pointer"
-            >
-              💰 Plantarse
-            </button>
-          </div>
+      <!-- Mesa de 5 dados y botones de acción -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-1">
+        <div id="diceContainer" class="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+          <!-- 5 Dados renderizados dinámicamente -->
+        </div>
+
+        <div class="flex items-center gap-2.5 w-full md:w-auto justify-center">
+          <button
+            id="btnRollDice"
+            type="button"
+            class="flex-1 md:flex-initial px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 active:scale-[0.98] text-white font-extrabold text-sm shadow-lg shadow-emerald-950/50 transition cursor-pointer"
+          >
+            Lanzar Dados
+          </button>
+
+          <button
+            id="btnBankPoints"
+            type="button"
+            class="flex-1 md:flex-initial px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:bg-slate-700 disabled:text-slate-500 active:scale-[0.98] text-white font-extrabold text-sm shadow-lg shadow-sky-950/50 transition cursor-pointer"
+          >
+            💰 Plantarse
+          </button>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECCIÓN INFERIOR COMPACTA: MARCADOR GLOBAL Y GANADOR                -->
+    <!-- SECCIÓN INFERIOR: TABLA DE PUNTUACIÓN POR JUGADOR Y MOVIMIENTOS     -->
     <!-- =================================================================== -->
-    <footer class="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 shadow-lg">
+    <footer class="bg-slate-800 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-col gap-2.5">
       <!-- Banner de ganador (aparece al llegar a 10,000 puntos) -->
-      <div id="winnerBanner" class="hidden mb-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-black text-center text-sm sm:text-base shadow-md">
+      <div id="winnerBanner" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-black text-center text-sm sm:text-base shadow-md">
         🏆 ¡GANADOR: <span id="winnerNameLabel">---</span> alcanzó los 10,000 puntos! Ya puedes iniciar una nueva partida arriba.
       </div>
 
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
-        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400 shrink-0">
-          Marcador Total:
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+          Marcador Total e Historial
         </span>
-        <div id="scoreboardCompact" class="flex flex-wrap items-center justify-center sm:justify-end gap-2 w-full">
-          <!-- Puntajes totales de cada jugador -->
-        </div>
+        <span id="movesCountBadge" class="text-[11px] font-semibold text-slate-400">
+          0 jugadas
+        </span>
+      </div>
+
+      <!-- Tabla dinámica: columnas por jugador, renglones del más reciente al más antiguo -->
+      <div class="overflow-x-auto overflow-y-auto max-h-56 rounded-xl border border-slate-700 bg-slate-900/90">
+        <table class="w-full text-xs sm:text-sm border-collapse text-center">
+          <thead id="scoreTableHead" class="sticky top-0 z-10 bg-slate-950 text-slate-200 border-b border-slate-700">
+            <!-- Encabezados con nombre y total de cada jugador -->
+          </thead>
+          <tbody id="scoreTableBody" class="divide-y divide-slate-800">
+            <!-- Renglones de movimientos (más reciente primero) -->
+          </tbody>
+        </table>
       </div>
     </footer>
   </div>
@@ -358,6 +361,7 @@
       hasRolledInCurrentTurn: false,
       rollingAnimation: false,
       history: [],
+      scoreRows: [], // [{ id, playerId, points }] más reciente al inicio
       winnerName: ''
     };
 
@@ -383,7 +387,9 @@
       selectedPointsDisplay: document.getElementById('selectedPointsDisplay'),
       btnRollDice: document.getElementById('btnRollDice'),
       btnBankPoints: document.getElementById('btnBankPoints'),
-      scoreboardCompact: document.getElementById('scoreboardCompact'),
+      movesCountBadge: document.getElementById('movesCountBadge'),
+      scoreTableHead: document.getElementById('scoreTableHead'),
+      scoreTableBody: document.getElementById('scoreTableBody'),
       winnerBanner: document.getElementById('winnerBanner'),
       winnerNameLabel: document.getElementById('winnerNameLabel'),
       toastBanner: document.getElementById('toastBanner'),
@@ -616,6 +622,7 @@
         hasRolledInCurrentTurn: false,
         rollingAnimation: false,
         history: [],
+        scoreRows: [],
         winnerName: ''
       };
 
@@ -805,6 +812,7 @@
       gameState.turnAccumulated = 0;
       gameState.hasRolledInCurrentTurn = false;
       gameState.history = [];
+      gameState.scoreRows = [];
       gameState.winnerName = '';
       resetDiceForNewTurn();
       broadcastState();
@@ -921,6 +929,7 @@
       gameState.hasRolledInCurrentTurn = false;
       gameState.winnerName = '';
       gameState.history = [];
+      gameState.scoreRows = [];
       resetDiceForNewTurn();
 
       addHistoryEntry(gameState.players[0].name, '¡Inicia la partida! Lanza los 5 dados.', 0, 'info');
@@ -1033,6 +1042,12 @@
       if (turnTotal <= 0) return;
 
       activePlayer.score += turnTotal;
+      if (!Array.isArray(gameState.scoreRows)) gameState.scoreRows = [];
+      gameState.scoreRows.unshift({
+        id: Date.now() + Math.random(),
+        playerId: activePlayer.id,
+        points: turnTotal
+      });
       addHistoryEntry(
         activePlayer.name,
         `💰 Se planta y guarda ${turnTotal.toLocaleString()} pts (Total: ${activePlayer.score.toLocaleString()} pts)`,
@@ -1202,20 +1217,59 @@
         el.winnerBanner.classList.add('hidden');
       }
 
-      el.scoreboardCompact.innerHTML = '';
+      const rows = Array.isArray(gameState.scoreRows) ? gameState.scoreRows : [];
+      el.movesCountBadge.textContent = `${rows.length} ${rows.length === 1 ? 'jugada' : 'jugadas'}`;
+
+      // Encabezado con una columna por cada jugador y su puntaje total acumulado
+      const headTr = document.createElement('tr');
+      headTr.className = 'divide-x divide-slate-700';
+
       gameState.players.forEach(p => {
-        const pill = document.createElement('div');
         const isWinner = gameState.phase === 'FINISHED' && p.name === gameState.winnerName;
-        pill.className = `px-3 py-1 rounded-xl text-xs font-bold border flex items-center gap-2 ${
-          isWinner
-            ? 'bg-amber-400/20 border-amber-400 text-amber-300'
-            : 'bg-slate-900 border-slate-700 text-slate-200'
+        const th = document.createElement('th');
+        th.className = `px-3 py-2 font-bold min-w-[95px] ${
+          isWinner ? 'bg-amber-500/20 text-amber-300' : 'text-slate-200'
         }`;
-        pill.innerHTML = `
-          <span>${escapeHtml(p.name)}:</span>
-          <span class="text-emerald-400 font-black">${p.score.toLocaleString()}</span>
+        th.innerHTML = `
+          <div class="truncate text-xs">${escapeHtml(p.name)}</div>
+          <div class="text-sm sm:text-base font-black text-emerald-400 mt-0.5">${p.score.toLocaleString()}</div>
         `;
-        el.scoreboardCompact.appendChild(pill);
+        headTr.appendChild(th);
+      });
+
+      el.scoreTableHead.innerHTML = '';
+      el.scoreTableHead.appendChild(headTr);
+
+      // Cuerpo con cada movimiento al plantarse (del más reciente arriba al más antiguo abajo)
+      el.scoreTableBody.innerHTML = '';
+
+      if (rows.length === 0) {
+        const emptyTr = document.createElement('tr');
+        const emptyTd = document.createElement('td');
+        emptyTd.colSpan = Math.max(gameState.players.length, 1);
+        emptyTd.className = 'py-4 px-3 text-xs text-slate-500 italic';
+        emptyTd.textContent = 'Aún no hay puntos anotados. Al plantarte aparecerán aquí.';
+        emptyTr.appendChild(emptyTd);
+        el.scoreTableBody.appendChild(emptyTr);
+        return;
+      }
+
+      rows.forEach((row, rowIdx) => {
+        const tr = document.createElement('tr');
+        tr.className = `divide-x divide-slate-800 ${rowIdx === 0 ? 'bg-emerald-500/10' : 'hover:bg-slate-800/50'}`;
+
+        gameState.players.forEach(p => {
+          const td = document.createElement('td');
+          td.className = 'px-3 py-2 font-mono';
+          if (row.playerId === p.id) {
+            td.innerHTML = `<span class="font-bold text-emerald-300">+${row.points.toLocaleString()}</span>`;
+          } else {
+            td.innerHTML = `<span class="text-slate-600">—</span>`;
+          }
+          tr.appendChild(td);
+        });
+
+        el.scoreTableBody.appendChild(tr);
       });
     }
 
